@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "baseUrl": "./",
+    "paths": {
+      "Three/*": ["./modules/three/src/*"],
+      "ThreeExamples/*": ["./modules/three/examples/jsm/*"]
+    }
+  }
+}
