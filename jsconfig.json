@@ -5,7 +5,8 @@
     "baseUrl": "./",
     "paths": {
       "Three/*": ["./modules/three/src/*"],
-      "ThreeExamples/*": ["./modules/three/examples/jsm/*"]
+      "ThreeExamples/*": ["./modules/three/examples/jsm/*"],
+      "ThreeFonts/*": ["./modules/three/examples/fonts/*"]
     }
   }
 }

@@ -40,6 +40,7 @@ import { Group } from 'Three/objects/Group.js';
 import { SphereGeometry } from 'Three/geometries/SphereGeometry.js';
 import { BoxGeometry } from 'Three/geometries/BoxGeometry.js';
 import { TorusGeometry } from 'Three/geometries/TorusGeometry.js';
+import { TextGeometry } from 'Three/geometries/TextGeometry.js';
 
 import { Mesh } from 'Three/objects/Mesh.js';
 
@@ -47,7 +48,8 @@ import { AxesHelper } from 'Three/helpers/AxesHelper.js';
 import { LoadingManager } from 'Three/loaders/LoadingManager.js';
 import { TextureLoader } from 'Three/loaders/TextureLoader.js';
 import { CubeTextureLoader } from 'Three/loaders/CubeTextureLoader.js';
-import { HDRCubeTextureLoader } from 'ThreeExamples/loaders/HDRCubeTextureLoader.js';
+import { FontLoader } from 'Three/loaders/FontLoader.js';
+// import { HDRCubeTextureLoader } from 'ThreeExamples/loaders/HDRCubeTextureLoader.js';
 
 import { GUI } from '/modules/dat.gui/build/dat.gui.module.js';
 
@@ -65,9 +67,10 @@ const materialGui = gui.addFolder('Material');
 const lightsGui = gui.addFolder('Lights');
 
 const loadingManager = new LoadingManager();
+const fontLoader = new FontLoader(loadingManager);
 const textureLoader = new TextureLoader(loadingManager);
 const cubeTextureLoader = new CubeTextureLoader(loadingManager);
-const cubeHDRTextureLoader = new HDRCubeTextureLoader(loadingManager);
+// const cubeHDRTextureLoader = new HDRCubeTextureLoader(loadingManager);
 const textures = {};
 const addFlatTexture = (name, src) => {
   textures[name] = textureLoader.load(src);
@@ -75,28 +78,17 @@ const addFlatTexture = (name, src) => {
   textures[name].max = NearestFilter;
   // textures[name].generateMipmaps = false;
 }
-const addCubeTexture = (name, src, _format) => {
-  const format = _format || 'jpg';
-  textures[name] = (format === 'hdr' ? cubeHDRTextureLoader : cubeTextureLoader).load([
-    `${src}/px.${format}`,
-    `${src}/nx.${format}`,
-    `${src}/py.${format}`,
-    `${src}/ny.${format}`,
-    `${src}/pz.${format}`,
-    `${src}/nz.${format}`,
-  ]);
-  textures[name].min = NearestFilter;
-  textures[name].max = NearestFilter;
-  // textures[name].generateMipmaps = false;
-}
 
-addCubeTexture('environment0', './i/environmentMaps/0');
-addCubeTexture('environment1', './i/environmentMaps/1');
-addCubeTexture('environment2', './i/environmentMaps/2');
-addCubeTexture('environment3', './i/environmentMaps/3');
-addCubeTexture('environment4', './i/environmentMaps/4', 'hdr');
-
-addFlatTexture('minecraft', './i/minecraft.png');
+textures.environment = cubeTextureLoader.load([
+  `./i/environmentMap/px.jpg`,
+  `./i/environmentMap/nx.jpg`,
+  `./i/environmentMap/py.jpg`,
+  `./i/environmentMap/ny.jpg`,
+  `./i/environmentMap/pz.jpg`,
+  `./i/environmentMap/nz.jpg`,
+]);
+textures.environment.min = NearestFilter;
+textures.environment.max = NearestFilter;
 
 addFlatTexture('doorAlpha', './i/door/alpha.jpg');
 addFlatTexture('doorAmbientOcclusion', './i/door/ambientOcclusion.jpg');
@@ -131,40 +123,84 @@ const sceneParams = {
 const shapesGroup = new Group();
 let groupRot = 0;
 
+
+
 const material = new MeshStandardMaterial();
   material.side = FrontSide;
   material.transparent = true;
   material.flatShading = false;
 
-  material.alphaMap = textures.doorAlpha;
+  // material.alphaMap = textures.doorAlpha;
+  // material.displacementMap = textures.doorHeight;
+  // material.displacementScale = 0.1;
+  // material.matcap = textures.matcapCell;`
   material.aoMap = textures.doorAmbientOcclusion;
   material.aoMapIntensity = 1.5;
   material.map  = textures.doorColor;
-  material.displacementMap = textures.doorHeight;
-  material.displacementScale = 0.1;
   material.metalness = 0.1;
   material.metalnessMap = textures.doorMetalness;
   material.normalMap = textures.doorNormal;
   material.roughness = 2.7;
   material.roughnessMap = textures.doorRoughness;
-  material.matcap = textures.matcapCell;
-  material.envMap = textures.environment3;
+  material.envMap = textures.environment;
   material.envMapIntensity = 12;
 
 const sphere = new Mesh(new SphereGeometry(0.8, 640, 320), material);
   sphere.geometry.setAttribute('uv2', sphere.geometry.attributes.uv);
+  sphere.position.x = -1.4;
+  sphere.position.y = -0.3;
 const box = new Mesh(new BoxGeometry(1, 1, 1, 250, 250, 250), material);
   box.geometry.setAttribute('uv2', box.geometry.attributes.uv);
+  box.position.y = -0.3;
 const torus = new Mesh(new TorusGeometry(0.6, 0.2, 320, 640), material);
   torus.geometry.setAttribute('uv2', torus.geometry.attributes.uv);
+  torus.position.x = 1.4;
+  torus.position.y = -0.3;
 
-sphere.position.x = -1.4;
-torus.position.x = 1.4;
+const particleGeometry = new TorusGeometry(0.1, 0.04, 12, 24);
+const particles = Array.from({ length: 1000 }, () => {
+  const torus = new Mesh(particleGeometry, material);
+  torus.position.x = (Math.random() - 0.5) * 10;
+  torus.position.y = (Math.random() - 0.5) * 10;
+  torus.position.z = (Math.random() - 0.5) * 10;
+  torus.speed = {};
+  torus.rotation.x = torus.speed.x = Math.random() * Math.PI;
+  torus.rotation.y = torus.speed.y = Math.random() * Math.PI;
+  torus.rotation.z = torus.speed.z = Math.random() * Math.PI;
+
+  return torus;
+});
+
+let text;
+fontLoader.load('../modules/three/examples/fonts/gentilis_regular.typeface.json',
+  (font) => {
+    const options = {
+      font,
+      size: 0.5,
+      height: 0.2,
+      steps: 5,
+      curveSegments: 12,
+      bevelEnabled: true,
+      bevelThickness: 0.03,
+      bevelSize: 0.02,
+      bevelOffset: 0,
+      bevelSegments: 5,
+    };
+    text = new Mesh(new TextGeometry('I’m wooden!', options), material);
+    text.geometry.center();
+    text.geometry.translate(0, 0.8, 0);
+    console.log(text.geometry.boundingBox);
+    shapesGroup.add(text);
+  },
+  () => { console.log('Still loading font…'); },
+  (e) => { console.log('Error loading font: ' + e); }
+);
 
 shapesGroup.add(
   sphere,
   box,
   torus,
+  ...particles,
 );
 
 
@@ -188,7 +224,7 @@ ambientLight.intensity = 0.8;
 
 const camera = ((type = 'perspective') => {
   let camera;
-  if (type === 'orthpgraphic') {
+  if (type === 'orthographic') {
     camera = new OrthographicCamera(
       -sceneParams.renderSize * sceneParams.aspectRatio, // left
       sceneParams.renderSize * sceneParams.aspectRatio, // right
@@ -204,7 +240,7 @@ const camera = ((type = 'perspective') => {
   }
 
   camera.near = 0.5;
-  camera.far = 20;
+  camera.far = 30;
   camera.position.z = 5;
   camera.position.y = 2;
   return camera;
@@ -214,18 +250,9 @@ cameraGui.add(camera.position, 'x').min(-10).max(10);
 cameraGui.add(camera.position, 'y').min(-10).max(10);
 cameraGui.add(camera.position, 'z').min(-10).max(10);
 
-const materialEvents = {
-  envMapIndex: 0,
-  changeEnvMap() {
-    this.envMapIndex = (this.envMapIndex + 1) % 5;
-    material.envMap = textures[`environment${this.envMapIndex}`];
-  },
-};
 materialGui.add(material, 'aoMapIntensity').min(0).max(2).step(0.01);
 materialGui.add(material, 'metalness').min(0).max(0.3).step(0.01);
 materialGui.add(material, 'roughness').min(0).max(10).step(0.01);
-materialGui.add(materialEvents, 'changeEnvMap');
-materialGui.add(material, 'envMapIntensity').min(0).max(30).step(0.01);
 
 lightsGui.add(pointLight1, 'intensity').min(0).max(1.5).step(0.01);
 lightsGui.add(pointLight2, 'intensity').min(0).max(1.5).step(0.01);
@@ -262,7 +289,7 @@ const renderer = new WebGLRenderer({
 renderer.setClearColor(0, 0);
 
 
-let lastTickTime = Date.now();
+let lastStepTime = Date.now();
 
 
 
@@ -278,12 +305,18 @@ function step() {
   sphere.rotation.z += itemSpeed / animationFPS;
   torus.rotation.y += itemSpeed / animationFPS;
   box.rotation.x += itemSpeed / animationFPS;
+
+  particles.forEach((particle) => {
+    particle.rotation.z += Math.max(-itemSpeed, Math.min(itemSpeed, (itemSpeed / particle.speed.y))) / animationFPS;
+    particle.rotation.y += Math.max(-itemSpeed, Math.min(itemSpeed, (itemSpeed / particle.speed.z))) / animationFPS;
+    particle.rotation.x += Math.max(-itemSpeed, Math.min(itemSpeed, (itemSpeed / particle.speed.x))) / animationFPS;
+  });
 }
 
 (function animate() {
-  while (lastTickTime < Date.now() - aniamtionMSPF) {
+  while (lastStepTime < Date.now() - aniamtionMSPF) {
     step();
-    lastTickTime += aniamtionMSPF;
+    lastStepTime += aniamtionMSPF;
   }
 
   cameraControls.update();
