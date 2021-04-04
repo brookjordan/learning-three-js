@@ -289,12 +289,6 @@ const renderer = new WebGLRenderer({
 renderer.setClearColor(0, 0);
 
 
-let lastStepTime = Date.now();
-
-
-
-const animationFPS = 60;
-const aniamtionMSPF = 1000 / animationFPS;
 
 const groupSpeed = 0.060;
 const itemSpeed = 0.200;
@@ -313,16 +307,29 @@ function step() {
   });
 }
 
-(function animate() {
-  while (lastStepTime < Date.now() - aniamtionMSPF) {
+let animateRAF;
+const animationFPS = 60;
+const aniamtionMSPF = 1000 / animationFPS;
+let lastStepTime = Date.now();
+
+function animate(init = false) {
+  if (init) {
+    lastStepTime = Date.now();
     step();
-    lastStepTime += aniamtionMSPF;
+  } else {
+    while (lastStepTime < Date.now() - aniamtionMSPF) {
+      step();
+      lastStepTime += aniamtionMSPF;
+    }
   }
 
   cameraControls.update();
 
-  requestAnimationFrame(animate);
-})();
+  animateRAF = requestAnimationFrame(() => { animate(); });
+}
+window.onblur = () => { cancelAnimationFrame(animateRAF); };
+window.onfocus = () => { animate({ init: true }); };
+animate({ init: true });
 
 
 
