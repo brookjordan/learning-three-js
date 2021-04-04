@@ -53,13 +53,12 @@ function copy({c, s0, s1, s2}, t) {
 }
 
 export default function impl(seed, opts) {
-  const xg = new Alea(seed);
+  const xg = Alea(seed);
   const state = opts && opts.state;
-  const prng = xg.next;
+  const prng = () => xg.next();
   prng.int32 = () => (xg.next() * 0x100000000) | 0
   prng.double = () =>
     prng() + (prng() * 0x200000 | 0) * 1.1102230246251565e-16 /* 2^-53 */;
-  prng.quick = prng;
   if (state) {
     if (typeof(state) == 'object') copy(state, xg);
     prng.state = () => copy(xg, {})

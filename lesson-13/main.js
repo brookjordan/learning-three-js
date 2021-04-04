@@ -1,5 +1,5 @@
 // alea is a predictable random library
-// import { Between } from '../scripts/alea.js';
+import Random from '../scripts/alea.js';
 
 import { WEBGL } from 'ThreeExamples/WebGL.js';
 
@@ -61,10 +61,12 @@ if (!WEBGL || !WEBGL.isWebGL2Available) {
   throw new Error(warning.textContent);
 }
 
+const _random = Random(123);
+const random = () => _random().value;
+window.random = random;
+
 const gui = new GUI();
-const cameraGui = gui.addFolder('Camera');
-const materialGui = gui.addFolder('Material');
-const lightsGui = gui.addFolder('Lights');
+const lightsGui = gui.addFolder('Light intensity');
 
 const loadingManager = new LoadingManager();
 const fontLoader = new FontLoader(loadingManager);
@@ -127,7 +129,7 @@ let groupRot = 0;
 
 const material = new MeshStandardMaterial();
   material.side = FrontSide;
-  material.transparent = true;
+  // material.transparent = true;
   material.flatShading = false;
 
   // material.alphaMap = textures.doorAlpha;
@@ -140,7 +142,7 @@ const material = new MeshStandardMaterial();
   material.metalness = 0.1;
   material.metalnessMap = textures.doorMetalness;
   material.normalMap = textures.doorNormal;
-  material.roughness = 2.7;
+  material.roughness = 2;
   material.roughnessMap = textures.doorRoughness;
   material.envMap = textures.environment;
   material.envMapIntensity = 12;
@@ -160,13 +162,13 @@ const torus = new Mesh(new TorusGeometry(0.6, 0.2, 320, 640), material);
 const particleGeometry = new TorusGeometry(0.1, 0.04, 12, 24);
 const particles = Array.from({ length: 1000 }, () => {
   const torus = new Mesh(particleGeometry, material);
-  torus.position.x = (Math.random() - 0.5) * 10;
-  torus.position.y = (Math.random() - 0.5) * 10;
-  torus.position.z = (Math.random() - 0.5) * 10;
+  torus.position.x = (random() - 0.5) * 10;
+  torus.position.y = (random() - 0.5) * 10;
+  torus.position.z = (random() - 0.5) * 10;
   torus.speed = {};
-  torus.rotation.x = torus.speed.x = Math.random() * Math.PI;
-  torus.rotation.y = torus.speed.y = Math.random() * Math.PI;
-  torus.rotation.z = torus.speed.z = Math.random() * Math.PI;
+  torus.rotation.x = torus.speed.x = random() * Math.PI;
+  torus.rotation.y = torus.speed.y = random() * Math.PI;
+  torus.rotation.z = torus.speed.z = random() * Math.PI;
 
   return torus;
 });
@@ -246,17 +248,10 @@ const camera = ((type = 'perspective') => {
   return camera;
 })();
 
-cameraGui.add(camera.position, 'x').min(-10).max(10);
-cameraGui.add(camera.position, 'y').min(-10).max(10);
-cameraGui.add(camera.position, 'z').min(-10).max(10);
-
-materialGui.add(material, 'aoMapIntensity').min(0).max(2).step(0.01);
-materialGui.add(material, 'metalness').min(0).max(0.3).step(0.01);
-materialGui.add(material, 'roughness').min(0).max(10).step(0.01);
-
-lightsGui.add(pointLight1, 'intensity').min(0).max(1.5).step(0.01);
-lightsGui.add(pointLight2, 'intensity').min(0).max(1.5).step(0.01);
-lightsGui.add(ambientLight, 'intensity').min(0).max(1.5).step(0.01);
+lightsGui.add(pointLight1, 'intensity').min(0).max(1.5).step(0.01).name("Front");
+lightsGui.add(pointLight2, 'intensity').min(0).max(1.5).step(0.01).name("Back");
+lightsGui.add(ambientLight, 'intensity').min(0).max(1.5).step(0.01).name("Ambient");
+lightsGui.add(material, 'envMapIntensity').min(0).max(30).step(0.01).name("Environment");
 
 
 const cameraControls = new OrbitControls(
