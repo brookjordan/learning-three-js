@@ -5,6 +5,6 @@
   },
   "scripts": {
     "preinstall": "rm -rf modules",
-    "postinstall": "mv node_modules modules"
+    "postinstall": "mv node_modules three/modules"
   }
 }
