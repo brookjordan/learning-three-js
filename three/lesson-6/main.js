@@ -15,7 +15,7 @@ import { OrbitControls } from 'ThreeExamples/controls/OrbitControls.js';
 import { Mesh } from 'Three/objects/Mesh.js';
 import { Group } from 'Three/objects/Group.js';
 import { AxesHelper } from 'Three/helpers/AxesHelper.js';
-import { GUI } from '/modules/dat.gui/build/dat.gui.module.js';
+import { GUI } from '/three/modules/dat.gui/build/dat.gui.module.js';
 
 const gui = new GUI();
 const cameraGui = gui.addFolder('Camera');

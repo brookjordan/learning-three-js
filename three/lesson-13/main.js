@@ -23,6 +23,7 @@ import { MeshStandardMaterial } from 'Three/materials/MeshStandardMaterial.js';
 
 import { PointLight } from 'Three/lights/PointLight.js';
 import { AmbientLight } from 'Three/lights/AmbientLight.js';
+import { RectAreaLight } from 'Three/lights/RectAreaLight.js';
 
 import {
   FrontSide,
@@ -40,6 +41,7 @@ import { Group } from 'Three/objects/Group.js';
 import { SphereGeometry } from 'Three/geometries/SphereGeometry.js';
 import { BoxGeometry } from 'Three/geometries/BoxGeometry.js';
 import { TorusGeometry } from 'Three/geometries/TorusGeometry.js';
+import { PlaneGeometry } from 'Three/geometries/PlaneGeometry.js';
 import { TextGeometry } from 'Three/geometries/TextGeometry.js';
 
 import { Mesh } from 'Three/objects/Mesh.js';
@@ -51,7 +53,7 @@ import { CubeTextureLoader } from 'Three/loaders/CubeTextureLoader.js';
 import { FontLoader } from 'Three/loaders/FontLoader.js';
 // import { HDRCubeTextureLoader } from 'ThreeExamples/loaders/HDRCubeTextureLoader.js';
 
-import { GUI } from '/modules/dat.gui/build/dat.gui.module.js';
+import { GUI } from '/three/modules/dat.gui/build/dat.gui.module.js';
 
 if (!WEBGL || !WEBGL.isWebGL2Available) {
 	document.querySelector('body').removeChild(document.querySelector('.webgl'));
@@ -67,6 +69,7 @@ window.random = random;
 
 const gui = new GUI();
 const lightsGui = gui.addFolder('Light intensity');
+const particlesGui = gui.addFolder('Particles');
 
 const loadingManager = new LoadingManager();
 const fontLoader = new FontLoader(loadingManager);
@@ -145,8 +148,13 @@ const material = new MeshStandardMaterial();
   material.roughness = 2;
   material.roughnessMap = textures.doorRoughness;
   material.envMap = textures.environment;
-  material.envMapIntensity = 12;
+  material.envMapIntensity = 4;
 
+const floor = new Mesh(new PlaneGeometry(30, 30), material);
+floor.geometry.setAttribute('uv2', floor.geometry.attributes.uv);
+  floor.rotation.x = Math.PI / -2;
+  // floor.position.x = -1.4;
+  floor.position.y = -6;
 const sphere = new Mesh(new SphereGeometry(0.8, 640, 320), material);
   sphere.geometry.setAttribute('uv2', sphere.geometry.attributes.uv);
   sphere.position.x = -1.4;
@@ -159,22 +167,42 @@ const torus = new Mesh(new TorusGeometry(0.6, 0.2, 320, 640), material);
   torus.position.x = 1.4;
   torus.position.y = -0.3;
 
-const particleGeometry = new TorusGeometry(0.1, 0.04, 12, 24);
-const particles = Array.from({ length: 1000 }, () => {
-  const torus = new Mesh(particleGeometry, material);
-  torus.position.x = (random() - 0.5) * 10;
-  torus.position.y = (random() - 0.5) * 10;
-  torus.position.z = (random() - 0.5) * 10;
+const particles = {
+  _displayCount: 0,
+  get displayCount() {
+    return this._displayCount;
+  },
+  set displayCount(newCount) {
+    shapesGroup.remove(...(this.display ?? []));
+    this.display = this.all.slice(0, newCount);
+    this._displayCount = newCount;
+    shapesGroup.add(...this.display);
+  },
+};
+particles.totalCount = 1e3;
+particles.particleGeometry = new TorusGeometry(0.1, 0.04, 12, 24);
+particles.all = Array.from({ length: particles.totalCount }, () => {
+  const torus = new Mesh(particles.particleGeometry, material);
+  torus.init = { position: {} };
+  torus.init.position.x = torus.position.x = (random() - 0.5) * 10;
+  torus.init.position.y = torus.position.y = (random() - 0.5) * 10;
+  torus.init.position.z = torus.position.z = (random() - 0.5) * 10;
   torus.speed = {};
   torus.rotation.x = torus.speed.x = random() * Math.PI;
   torus.rotation.y = torus.speed.y = random() * Math.PI;
   torus.rotation.z = torus.speed.z = random() * Math.PI;
 
+  torus.phase = Math.random() * Math.PI * 2;
+  torus.bounce = Math.random() * 0.2 + 0.1;
+  torus.speed.phase = Math.random() * 0.01 + 0.01;
+
   return torus;
 });
+particles.displayCount = 10;
+
 
 let text;
-fontLoader.load('../modules/three/examples/fonts/gentilis_regular.typeface.json',
+fontLoader.load('/three/modules/three/examples/fonts/gentilis_regular.typeface.json',
   (font) => {
     const options = {
       font,
@@ -202,25 +230,25 @@ shapesGroup.add(
   sphere,
   box,
   torus,
-  ...particles,
 );
 
 
+const areaLight = new RectAreaLight(0xf9f3b5, 5, 5, 5);
+areaLight.position.x = 4;
+areaLight.position.z = 5;
+areaLight.position.y = 3;
+areaLight.intensity = 6;
+areaLight.lookAt(0, 0, 0);
 
-const pointLight1 = new PointLight(0xf9f3b5);
-pointLight1.position.x = 4;
-pointLight1.position.z = 5;
-pointLight1.position.y = 3;
-pointLight1.intensity = 0.8;
+const pointLight = new PointLight(0x67b8ff);
+pointLight.position.x = -3;
+pointLight.position.z = -5;
+pointLight.position.y = -8;
+pointLight.decay = 2;
+pointLight.power = 5000;
 
-const pointLight2 = new PointLight(0xf9f3b5);
-pointLight2.position.x = -3;
-pointLight2.position.z = -5;
-pointLight2.position.y = -5;
-pointLight2.intensity = 0.5;
-
-const ambientLight = new AmbientLight(0x9254bf);
-ambientLight.intensity = 0.8;
+const ambientLight = new AmbientLight(0x9254bf,);
+ambientLight.intensity = 1;
 
 
 
@@ -248,10 +276,13 @@ const camera = ((type = 'perspective') => {
   return camera;
 })();
 
-lightsGui.add(pointLight1, 'intensity').min(0).max(1.5).step(0.01).name("Front");
-lightsGui.add(pointLight2, 'intensity').min(0).max(1.5).step(0.01).name("Back");
-lightsGui.add(ambientLight, 'intensity').min(0).max(1.5).step(0.01).name("Ambient");
-lightsGui.add(material, 'envMapIntensity').min(0).max(30).step(0.01).name("Environment");
+lightsGui.add(areaLight, 'intensity').min(0).max(20).step(1).name("Front - area");
+lightsGui.add(pointLight, 'power').min(0).max(2e4).step(100).name("Back - point");
+lightsGui.add(pointLight, 'decay').min(0).max(3).step(0.1).name("Back - decay");
+lightsGui.add(ambientLight, 'intensity').min(0).max(20).step(0.1).name("Ambient");
+lightsGui.add(material, 'envMapIntensity').min(0).max(20).step(0.1).name("Environment");
+
+particlesGui.add(particles, 'displayCount').min(0).max(particles.totalCount).step(1).name("Particle count");
 
 
 const cameraControls = new OrbitControls(
@@ -261,17 +292,18 @@ const cameraControls = new OrbitControls(
 cameraControls.enableDamping = true;
 
 
-const axesHelper = new AxesHelper(3,3,3);
+// const axesHelper = new AxesHelper(3,3,3);
 
 
 const scene = new Scene();
 scene.add(
   camera,
+  floor,
   shapesGroup,
-  axesHelper,
+  // axesHelper,
 
-  pointLight1,
-  pointLight2,
+  pointLight,
+  areaLight,
   ambientLight,
 );
 
@@ -281,6 +313,7 @@ const renderer = new WebGLRenderer({
   antialias: true,
   alpha: true,
 });
+renderer.physicallyCorrectLights = true;
 renderer.setClearColor(0, 0);
 
 
@@ -295,16 +328,19 @@ function step() {
   torus.rotation.y += itemSpeed / animationFPS;
   box.rotation.x += itemSpeed / animationFPS;
 
-  particles.forEach((particle) => {
+  particles.display.forEach((particle) => {
     particle.rotation.z += Math.max(-itemSpeed, Math.min(itemSpeed, (itemSpeed / particle.speed.y))) / animationFPS;
     particle.rotation.y += Math.max(-itemSpeed, Math.min(itemSpeed, (itemSpeed / particle.speed.z))) / animationFPS;
     particle.rotation.x += Math.max(-itemSpeed, Math.min(itemSpeed, (itemSpeed / particle.speed.x))) / animationFPS;
+
+    particle.phase += particle.speed.phase;
+    particle.position.y = particle.init.position.y + Math.sin(particle.phase) * particle.bounce - particle.bounce / 2;
   });
 }
 
 let animateRAF;
 const animationFPS = 60;
-const aniamtionMSPF = 1000 / animationFPS;
+const animationMSPF = 1000 / animationFPS;
 let lastStepTime = Date.now();
 
 function animate(init = false) {
@@ -312,9 +348,9 @@ function animate(init = false) {
     lastStepTime = Date.now();
     step();
   } else {
-    while (lastStepTime < Date.now() - aniamtionMSPF) {
+    while (lastStepTime < Date.now() - animationMSPF) {
       step();
-      lastStepTime += aniamtionMSPF;
+      lastStepTime += animationMSPF;
     }
   }
 

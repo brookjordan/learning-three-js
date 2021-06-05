@@ -5,7 +5,7 @@ import {
   BoxGeometry,
   MeshBasicMaterial,
   PerspectiveCamera,
-} from '../modules/three/build/three.module.js';
+} from '/three/modules/three/build/three.module.js';
 
 const sceneParams = {
   width: 800,

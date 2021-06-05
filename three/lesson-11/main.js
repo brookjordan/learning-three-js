@@ -49,7 +49,7 @@ import { TextureLoader } from 'Three/loaders/TextureLoader.js';
 import { CubeTextureLoader } from 'Three/loaders/CubeTextureLoader.js';
 import { HDRCubeTextureLoader } from 'ThreeExamples/loaders/HDRCubeTextureLoader.js';
 
-import { GUI } from '/modules/dat.gui/build/dat.gui.module.js';
+import { GUI } from '/three/modules/dat.gui/build/dat.gui.module.js';
 
 if (!WEBGL || !WEBGL.isWebGL2Available) {
 	document.querySelector('body').removeChild(document.querySelector('.webgl'));
