@@ -85,29 +85,29 @@ const addFlatTexture = (name, src) => {
 }
 
 textures.environment = cubeTextureLoader.load([
-  `./i/environmentMap/px.jpg`,
-  `./i/environmentMap/nx.jpg`,
-  `./i/environmentMap/py.jpg`,
-  `./i/environmentMap/ny.jpg`,
-  `./i/environmentMap/pz.jpg`,
-  `./i/environmentMap/nz.jpg`,
+  `/three/i/environmentMap/px.jpg`,
+  `/three/i/environmentMap/nx.jpg`,
+  `/three/i/environmentMap/py.jpg`,
+  `/three/i/environmentMap/ny.jpg`,
+  `/three/i/environmentMap/pz.jpg`,
+  `/three/i/environmentMap/nz.jpg`,
 ]);
 textures.environment.min = NearestFilter;
 textures.environment.max = NearestFilter;
 
-addFlatTexture('doorAlpha', './i/door/alpha.jpg');
-addFlatTexture('doorAmbientOcclusion', './i/door/ambientOcclusion.jpg');
-addFlatTexture('doorColor', './i/door/color.jpg');
-addFlatTexture('doorHeight', './i/door/height.jpg');
-addFlatTexture('doorMetalness', './i/door/metalness.jpg');
-addFlatTexture('doorNormal', './i/door/normal.jpg');
-addFlatTexture('doorRoughness', './i/door/roughness.jpg');
+addFlatTexture('doorAlpha', '/three/i/door/alpha.jpg');
+addFlatTexture('doorAmbientOcclusion', '/three/i/door/ambientOcclusion.jpg');
+addFlatTexture('doorColor', '/three/i/door/color.jpg');
+addFlatTexture('doorHeight', '/three/i/door/height.jpg');
+addFlatTexture('doorMetalness', '/three/i/door/metalness.jpg');
+addFlatTexture('doorNormal', '/three/i/door/normal.jpg');
+addFlatTexture('doorRoughness', '/three/i/door/roughness.jpg');
 
-addFlatTexture('matcapClay', './i/matcap/1.png');
-addFlatTexture('matcapChrome', './i/matcap/3.png');
-addFlatTexture('matcapRed', './i/matcap/4.png');
-addFlatTexture('matcapIronman', './i/matcap/5.png');
-addFlatTexture('matcapCell', './i/matcap/7.png');
+addFlatTexture('matcapClay', '/three/i/matcap/1.png');
+addFlatTexture('matcapChrome', '/three/i/matcap/3.png');
+addFlatTexture('matcapRed', '/three/i/matcap/4.png');
+addFlatTexture('matcapIronman', '/three/i/matcap/5.png');
+addFlatTexture('matcapCell', '/three/i/matcap/7.png');
 
 const sceneParams = {
   width: window.innerWidth,
