@@ -26,9 +26,9 @@ import { AmbientLight } from 'Three/lights/AmbientLight.js';
 
 import {
   FrontSide,
-  BackSide,
-  DoubleSide,
-  RepeatWrapping,
+  // BackSide,
+  // DoubleSide,
+  // RepeatWrapping,
   NearestFilter,
 } from 'Three/constants.js';
 
@@ -52,10 +52,10 @@ import { HDRCubeTextureLoader } from 'ThreeExamples/loaders/HDRCubeTextureLoader
 import { GUI } from '/three/modules/dat.gui/build/dat.gui.module.js';
 
 if (!WEBGL || !WEBGL.isWebGL2Available) {
-	document.querySelector('body').removeChild(document.querySelector('.webgl'));
+  document.querySelector('body').removeChild(document.querySelector('.webgl'));
 
-	const warning = WEBGL.getWebGL2ErrorMessage();
-	document.querySelector('body').appendChild(warning);
+  const warning = WEBGL.getWebGL2ErrorMessage();
+  document.querySelector('body').appendChild(warning);
   throw new Error(warning.textContent);
 }
 
@@ -74,7 +74,7 @@ const addFlatTexture = (name, src) => {
   textures[name].min = NearestFilter;
   textures[name].max = NearestFilter;
   // textures[name].generateMipmaps = false;
-}
+};
 const addCubeTexture = (name, src, _format) => {
   const format = _format || 'jpg';
   textures[name] = (format === 'hdr' ? cubeHDRTextureLoader : cubeTextureLoader).load([
@@ -88,7 +88,7 @@ const addCubeTexture = (name, src, _format) => {
   textures[name].min = NearestFilter;
   textures[name].max = NearestFilter;
   // textures[name].generateMipmaps = false;
-}
+};
 
 addCubeTexture('environment0', './i/environmentMaps/0');
 addCubeTexture('environment1', './i/environmentMaps/1');
@@ -115,7 +115,9 @@ addFlatTexture('matcapCell', './i/matcap/7.png');
 const sceneParams = {
   width: window.innerWidth,
   height: window.innerHeight,
-  get aspectRatio() { return this.width / this.height },
+  get aspectRatio() {
+    return this.width / this.height;
+  },
   // Perpective camera
   fov: 45,
   // Orthographic camera
@@ -126,48 +128,40 @@ const sceneParams = {
   canvasDimensionsUpdated: false,
 };
 
-
-
 const shapesGroup = new Group();
 let groupRot = 0;
 
 const material = new MeshStandardMaterial();
-  material.side = FrontSide;
-  material.transparent = true;
-  material.flatShading = false;
+material.side = FrontSide;
+material.transparent = true;
+material.flatShading = false;
 
-  material.alphaMap = textures.doorAlpha;
-  material.aoMap = textures.doorAmbientOcclusion;
-  material.aoMapIntensity = 1.5;
-  material.map  = textures.doorColor;
-  material.displacementMap = textures.doorHeight;
-  material.displacementScale = 0.1;
-  material.metalness = 0.1;
-  material.metalnessMap = textures.doorMetalness;
-  material.normalMap = textures.doorNormal;
-  material.roughness = 2.7;
-  material.roughnessMap = textures.doorRoughness;
-  material.matcap = textures.matcapCell;
-  material.envMap = textures.environment3;
-  material.envMapIntensity = 12;
+material.alphaMap = textures.doorAlpha;
+material.aoMap = textures.doorAmbientOcclusion;
+material.aoMapIntensity = 1.5;
+material.map = textures.doorColor;
+material.displacementMap = textures.doorHeight;
+material.displacementScale = 0.1;
+material.metalness = 0.1;
+material.metalnessMap = textures.doorMetalness;
+material.normalMap = textures.doorNormal;
+material.roughness = 2.7;
+material.roughnessMap = textures.doorRoughness;
+material.matcap = textures.matcapCell;
+material.envMap = textures.environment3;
+material.envMapIntensity = 12;
 
 const sphere = new Mesh(new SphereGeometry(0.8, 640, 320), material);
-  sphere.geometry.setAttribute('uv2', sphere.geometry.attributes.uv);
+sphere.geometry.setAttribute('uv2', sphere.geometry.attributes.uv);
 const box = new Mesh(new BoxGeometry(1, 1, 1, 250, 250, 250), material);
-  box.geometry.setAttribute('uv2', box.geometry.attributes.uv);
+box.geometry.setAttribute('uv2', box.geometry.attributes.uv);
 const torus = new Mesh(new TorusGeometry(0.6, 0.2, 320, 640), material);
-  torus.geometry.setAttribute('uv2', torus.geometry.attributes.uv);
+torus.geometry.setAttribute('uv2', torus.geometry.attributes.uv);
 
 sphere.position.x = -1.4;
 torus.position.x = 1.4;
 
-shapesGroup.add(
-  sphere,
-  box,
-  torus,
-);
-
-
+shapesGroup.add(sphere, box, torus);
 
 const pointLight1 = new PointLight(0xf9f3b5);
 pointLight1.position.x = 4;
@@ -183,8 +177,6 @@ pointLight2.intensity = 0.5;
 
 const ambientLight = new AmbientLight(0x9254bf);
 ambientLight.intensity = 0.8;
-
-
 
 const camera = ((type = 'perspective') => {
   let camera;
@@ -231,16 +223,10 @@ lightsGui.add(pointLight1, 'intensity').min(0).max(1.5).step(0.01);
 lightsGui.add(pointLight2, 'intensity').min(0).max(1.5).step(0.01);
 lightsGui.add(ambientLight, 'intensity').min(0).max(1.5).step(0.01);
 
-
-const cameraControls = new OrbitControls(
-  camera,
-  sceneParams.canvas,
-);
+const cameraControls = new OrbitControls(camera, sceneParams.canvas);
 cameraControls.enableDamping = true;
 
-
-const axesHelper = new AxesHelper(3,3,3);
-
+const axesHelper = new AxesHelper(3, 3, 3);
 
 const scene = new Scene();
 scene.add(
@@ -253,7 +239,6 @@ scene.add(
   ambientLight,
 );
 
-
 const renderer = new WebGLRenderer({
   canvas: sceneParams.canvas,
   antialias: true,
@@ -261,16 +246,13 @@ const renderer = new WebGLRenderer({
 });
 renderer.setClearColor(0, 0);
 
-
 let lastTickTime = Date.now();
-
-
 
 const animationFPS = 60;
 const aniamtionMSPF = 1000 / animationFPS;
 
-const groupSpeed = 0.060;
-const itemSpeed = 0.200;
+const groupSpeed = 0.06;
+const itemSpeed = 0.2;
 function step() {
   groupRot += groupSpeed / animationFPS;
   shapesGroup.rotation.y = groupRot;
@@ -291,8 +273,6 @@ function step() {
   requestAnimationFrame(animate);
 })();
 
-
-
 (function render() {
   if (sceneParams.canvasDimensionsUpdated) {
     renderer.setSize(sceneParams.width, sceneParams.height);
@@ -302,14 +282,10 @@ function step() {
     sceneParams.canvasDimensionsUpdated = false;
   }
 
-  renderer.render(
-    scene,
-    camera,
-  );
+  renderer.render(scene, camera);
 
   requestAnimationFrame(render);
 })();
-
 
 function updateRenderDimensions() {
   sceneParams.width = window.innerWidth;
@@ -318,14 +294,13 @@ function updateRenderDimensions() {
 }
 updateRenderDimensions();
 
-
-window.addEventListener('mousemove',  (event) => {
+window.addEventListener('mousemove', (event) => {
   const touch = event.touches ? event.touches[0] : event;
-  sceneParams.cursorX = (touch.clientX - sceneParams.canvas.offsetLeft) / sceneParams.width * 2 - 1;
-  sceneParams.cursorY = (touch.clientY - sceneParams.canvas.offsetTop) / sceneParams.height * -2 + 1;
+  sceneParams.cursorX = ((touch.clientX - sceneParams.canvas.offsetLeft) / sceneParams.width) * 2 - 1;
+  sceneParams.cursorY = ((touch.clientY - sceneParams.canvas.offsetTop) / sceneParams.height) * -2 + 1;
 });
 
-sceneParams.canvas.addEventListener('dblclick',  () => {
+sceneParams.canvas.addEventListener('dblclick', () => {
   if (document.fullscreenElement) {
     document.exitFullscreen();
   } else {

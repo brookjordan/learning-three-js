@@ -27,9 +27,9 @@ import { RectAreaLight } from 'Three/lights/RectAreaLight.js';
 
 import {
   FrontSide,
-  BackSide,
-  DoubleSide,
-  RepeatWrapping,
+  // BackSide,
+  // DoubleSide,
+  // RepeatWrapping,
   NearestFilter,
 } from 'Three/constants.js';
 
@@ -46,7 +46,7 @@ import { TextGeometry } from 'Three/geometries/TextGeometry.js';
 
 import { Mesh } from 'Three/objects/Mesh.js';
 
-import { AxesHelper } from 'Three/helpers/AxesHelper.js';
+// import { AxesHelper } from 'Three/helpers/AxesHelper.js';
 import { LoadingManager } from 'Three/loaders/LoadingManager.js';
 import { TextureLoader } from 'Three/loaders/TextureLoader.js';
 import { CubeTextureLoader } from 'Three/loaders/CubeTextureLoader.js';
@@ -56,10 +56,10 @@ import { FontLoader } from 'Three/loaders/FontLoader.js';
 import { GUI } from '/three/modules/dat.gui/build/dat.gui.module.js';
 
 if (!WEBGL || !WEBGL.isWebGL2Available) {
-	document.querySelector('body').removeChild(document.querySelector('.webgl'));
+  document.querySelector('body').removeChild(document.querySelector('.webgl'));
 
-	const warning = WEBGL.getWebGL2ErrorMessage();
-	document.querySelector('body').appendChild(warning);
+  const warning = WEBGL.getWebGL2ErrorMessage();
+  document.querySelector('body').appendChild(warning);
   throw new Error(warning.textContent);
 }
 
@@ -82,15 +82,15 @@ const addFlatTexture = (name, src) => {
   textures[name].min = NearestFilter;
   textures[name].max = NearestFilter;
   // textures[name].generateMipmaps = false;
-}
+};
 
 textures.environment = cubeTextureLoader.load([
-  `/three/i/environmentMap/px.jpg`,
-  `/three/i/environmentMap/nx.jpg`,
-  `/three/i/environmentMap/py.jpg`,
-  `/three/i/environmentMap/ny.jpg`,
-  `/three/i/environmentMap/pz.jpg`,
-  `/three/i/environmentMap/nz.jpg`,
+  '/three/i/environmentMap/px.jpg',
+  '/three/i/environmentMap/nx.jpg',
+  '/three/i/environmentMap/py.jpg',
+  '/three/i/environmentMap/ny.jpg',
+  '/three/i/environmentMap/pz.jpg',
+  '/three/i/environmentMap/nz.jpg',
 ]);
 textures.environment.min = NearestFilter;
 textures.environment.max = NearestFilter;
@@ -112,7 +112,9 @@ addFlatTexture('matcapCell', '/three/i/matcap/7.png');
 const sceneParams = {
   width: window.innerWidth,
   height: window.innerHeight,
-  get aspectRatio() { return this.width / this.height },
+  get aspectRatio() {
+    return this.width / this.height;
+  },
   // Perpective camera
   fov: 45,
   // Orthographic camera
@@ -123,14 +125,11 @@ const sceneParams = {
   canvasDimensionsUpdated: false,
 };
 
-
-
 const shapesGroup = new Group();
 let groupRot = 0;
 
-
-
 const material = new MeshStandardMaterial();
+{
   material.side = FrontSide;
   // material.transparent = true;
   material.flatShading = false;
@@ -141,7 +140,7 @@ const material = new MeshStandardMaterial();
   // material.matcap = textures.matcapCell;`
   material.aoMap = textures.doorAmbientOcclusion;
   material.aoMapIntensity = 1.5;
-  material.map  = textures.doorColor;
+  material.map = textures.doorColor;
   material.metalness = 0.1;
   material.metalnessMap = textures.doorMetalness;
   material.normalMap = textures.doorNormal;
@@ -149,23 +148,32 @@ const material = new MeshStandardMaterial();
   material.roughnessMap = textures.doorRoughness;
   material.envMap = textures.environment;
   material.envMapIntensity = 4;
+}
 
 const floor = new Mesh(new PlaneGeometry(30, 30), material);
 floor.geometry.setAttribute('uv2', floor.geometry.attributes.uv);
+{
   floor.rotation.x = Math.PI / -2;
   // floor.position.x = -1.4;
   floor.position.y = -6;
+}
 const sphere = new Mesh(new SphereGeometry(0.8, 640, 320), material);
+{
   sphere.geometry.setAttribute('uv2', sphere.geometry.attributes.uv);
   sphere.position.x = -1.4;
   sphere.position.y = -0.3;
+}
 const box = new Mesh(new BoxGeometry(1, 1, 1, 250, 250, 250), material);
+{
   box.geometry.setAttribute('uv2', box.geometry.attributes.uv);
   box.position.y = -0.3;
+}
 const torus = new Mesh(new TorusGeometry(0.6, 0.2, 320, 640), material);
+{
   torus.geometry.setAttribute('uv2', torus.geometry.attributes.uv);
   torus.position.x = 1.4;
   torus.position.y = -0.3;
+}
 
 const particles = {
   _displayCount: 0,
@@ -200,9 +208,9 @@ particles.all = Array.from({ length: particles.totalCount }, () => {
 });
 particles.displayCount = 10;
 
-
 let text;
-fontLoader.load('/three/modules/three/examples/fonts/gentilis_regular.typeface.json',
+fontLoader.load(
+  '/three/modules/three/examples/fonts/gentilis_regular.typeface.json',
   (font) => {
     const options = {
       font,
@@ -222,16 +230,15 @@ fontLoader.load('/three/modules/three/examples/fonts/gentilis_regular.typeface.j
     console.log(text.geometry.boundingBox);
     shapesGroup.add(text);
   },
-  () => { console.log('Still loading font…'); },
-  (e) => { console.log('Error loading font: ' + e); }
+  () => {
+    console.log('Still loading font…');
+  },
+  (e) => {
+    console.log('Error loading font: ' + e);
+  },
 );
 
-shapesGroup.add(
-  sphere,
-  box,
-  torus,
-);
-
+shapesGroup.add(sphere, box, torus);
 
 const areaLight = new RectAreaLight(0xf9f3b5, 5, 5, 5);
 areaLight.position.x = 4;
@@ -247,10 +254,8 @@ pointLight.position.y = -8;
 pointLight.decay = 2;
 pointLight.power = 5000;
 
-const ambientLight = new AmbientLight(0x9254bf,);
+const ambientLight = new AmbientLight(0x9254bf);
 ambientLight.intensity = 1;
-
-
 
 const camera = ((type = 'perspective') => {
   let camera;
@@ -276,24 +281,18 @@ const camera = ((type = 'perspective') => {
   return camera;
 })();
 
-lightsGui.add(areaLight, 'intensity').min(0).max(20).step(1).name("Front - area");
-lightsGui.add(pointLight, 'power').min(0).max(2e4).step(100).name("Back - point");
-lightsGui.add(pointLight, 'decay').min(0).max(3).step(0.1).name("Back - decay");
-lightsGui.add(ambientLight, 'intensity').min(0).max(20).step(0.1).name("Ambient");
-lightsGui.add(material, 'envMapIntensity').min(0).max(20).step(0.1).name("Environment");
+lightsGui.add(areaLight, 'intensity').min(0).max(20).step(1).name('Front - area');
+lightsGui.add(pointLight, 'power').min(0).max(2e4).step(100).name('Back - point');
+lightsGui.add(pointLight, 'decay').min(0).max(3).step(0.1).name('Back - decay');
+lightsGui.add(ambientLight, 'intensity').min(0).max(20).step(0.1).name('Ambient');
+lightsGui.add(material, 'envMapIntensity').min(0).max(20).step(0.1).name('Environment');
 
-particlesGui.add(particles, 'displayCount').min(0).max(particles.totalCount).step(1).name("Particle count");
+particlesGui.add(particles, 'displayCount').min(0).max(particles.totalCount).step(1).name('Particle count');
 
-
-const cameraControls = new OrbitControls(
-  camera,
-  sceneParams.canvas,
-);
+const cameraControls = new OrbitControls(camera, sceneParams.canvas);
 cameraControls.enableDamping = true;
 
-
 // const axesHelper = new AxesHelper(3,3,3);
-
 
 const scene = new Scene();
 scene.add(
@@ -307,7 +306,6 @@ scene.add(
   ambientLight,
 );
 
-
 const renderer = new WebGLRenderer({
   canvas: sceneParams.canvas,
   antialias: true,
@@ -316,10 +314,8 @@ const renderer = new WebGLRenderer({
 renderer.physicallyCorrectLights = true;
 renderer.setClearColor(0, 0);
 
-
-
-const groupSpeed = 0.060;
-const itemSpeed = 0.200;
+const groupSpeed = 0.06;
+const itemSpeed = 0.2;
 function step() {
   groupRot += groupSpeed / animationFPS;
   shapesGroup.rotation.y = groupRot;
@@ -329,9 +325,9 @@ function step() {
   box.rotation.x += itemSpeed / animationFPS;
 
   particles.display.forEach((particle) => {
-    particle.rotation.z += Math.max(-itemSpeed, Math.min(itemSpeed, (itemSpeed / particle.speed.y))) / animationFPS;
-    particle.rotation.y += Math.max(-itemSpeed, Math.min(itemSpeed, (itemSpeed / particle.speed.z))) / animationFPS;
-    particle.rotation.x += Math.max(-itemSpeed, Math.min(itemSpeed, (itemSpeed / particle.speed.x))) / animationFPS;
+    particle.rotation.z += Math.max(-itemSpeed, Math.min(itemSpeed, itemSpeed / particle.speed.y)) / animationFPS;
+    particle.rotation.y += Math.max(-itemSpeed, Math.min(itemSpeed, itemSpeed / particle.speed.z)) / animationFPS;
+    particle.rotation.x += Math.max(-itemSpeed, Math.min(itemSpeed, itemSpeed / particle.speed.x)) / animationFPS;
 
     particle.phase += particle.speed.phase;
     particle.position.y = particle.init.position.y + Math.sin(particle.phase) * particle.bounce - particle.bounce / 2;
@@ -356,13 +352,17 @@ function animate(init = false) {
 
   cameraControls.update();
 
-  animateRAF = requestAnimationFrame(() => { animate(); });
+  animateRAF = requestAnimationFrame(() => {
+    animate();
+  });
 }
-window.onblur = () => { cancelAnimationFrame(animateRAF); };
-window.onfocus = () => { animate({ init: true }); };
+window.onblur = () => {
+  cancelAnimationFrame(animateRAF);
+};
+window.onfocus = () => {
+  animate({ init: true });
+};
 animate({ init: true });
-
-
 
 (function render() {
   if (sceneParams.canvasDimensionsUpdated) {
@@ -373,14 +373,10 @@ animate({ init: true });
     sceneParams.canvasDimensionsUpdated = false;
   }
 
-  renderer.render(
-    scene,
-    camera,
-  );
+  renderer.render(scene, camera);
 
   requestAnimationFrame(render);
 })();
-
 
 function updateRenderDimensions() {
   sceneParams.width = window.innerWidth;
@@ -389,14 +385,13 @@ function updateRenderDimensions() {
 }
 updateRenderDimensions();
 
-
-window.addEventListener('mousemove',  (event) => {
+window.addEventListener('mousemove', (event) => {
   const touch = event.touches ? event.touches[0] : event;
-  sceneParams.cursorX = (touch.clientX - sceneParams.canvas.offsetLeft) / sceneParams.width * 2 - 1;
-  sceneParams.cursorY = (touch.clientY - sceneParams.canvas.offsetTop) / sceneParams.height * -2 + 1;
+  sceneParams.cursorX = ((touch.clientX - sceneParams.canvas.offsetLeft) / sceneParams.width) * 2 - 1;
+  sceneParams.cursorY = ((touch.clientY - sceneParams.canvas.offsetTop) / sceneParams.height) * -2 + 1;
 });
 
-sceneParams.canvas.addEventListener('dblclick',  () => {
+sceneParams.canvas.addEventListener('dblclick', () => {
   if (document.fullscreenElement) {
     document.exitFullscreen();
   } else {

@@ -1,7 +1,7 @@
 function Mash() {
   let n = 0xefc8249d;
 
-  const mash = data => {
+  const mash = (data) => {
     data = String(data);
     for (let i = 0; i < data.length; i++) {
       n += data.charCodeAt(i);
@@ -27,11 +27,17 @@ export function* Alea(seed) {
   let s1 = mash(' ');
   let s2 = mash(' ');
   s0 -= mash(seed);
-  if (s0 < 0) { s0 += 1; }
+  if (s0 < 0) {
+    s0 += 1;
+  }
   s1 -= mash(seed);
-  if (s1 < 0) { s1 += 1; }
+  if (s1 < 0) {
+    s1 += 1;
+  }
   s2 -= mash(seed);
-  if (s2 < 0) { s2 += 1; }
+  if (s2 < 0) {
+    s2 += 1;
+  }
   mash = null;
 
   let t = 2091639 * s0 + c * 2.3283064365386963e-10; // 2^-32
@@ -44,7 +50,7 @@ export function* Alea(seed) {
   }
 }
 
-function copy({c, s0, s1, s2}, t) {
+function copy({ c, s0, s1, s2 }, t) {
   t.c = c;
   t.s0 = s0;
   t.s1 = s1;
@@ -56,17 +62,16 @@ export default function impl(seed, opts) {
   const xg = Alea(seed);
   const state = opts && opts.state;
   const prng = () => xg.next();
-  prng.int32 = () => (xg.next() * 0x100000000) | 0
-  prng.double = () =>
-    prng() + (prng() * 0x200000 | 0) * 1.1102230246251565e-16 /* 2^-53 */;
+  prng.int32 = () => (xg.next() * 0x100000000) | 0;
+  prng.double = () => prng() + ((prng() * 0x200000) | 0) * 1.1102230246251565e-16 /* 2^-53 */;
   if (state) {
-    if (typeof(state) == 'object') copy(state, xg);
-    prng.state = () => copy(xg, {})
+    if (typeof state == 'object') copy(state, xg);
+    prng.state = () => copy(xg, {});
   }
   return prng;
 }
 
 export function Between(seed) {
   const alea = Alea(seed);
-  return (min, max) => alea.next().value * (max - min) + min
+  return (min, max) => alea.next().value * (max - min) + min;
 }

@@ -9,7 +9,7 @@ import { BufferGeometry } from 'Three/core/BufferGeometry.js';
 import { MeshBasicMaterial } from 'Three/materials/MeshBasicMaterial.js';
 // import { MeshPhongMaterial } from 'Three/materials/MeshPhongMaterial.js';
 // import { LineDashedMaterial } from 'Three/materials/LineDashedMaterial.js';
-import { FrontSide, BackSide, DoubleSide } from 'Three/constants.js';
+import { FrontSide /*, BackSide, DoubleSide*/ } from 'Three/constants.js';
 import { Float32BufferAttribute } from 'Three/core/BufferAttribute.js';
 import { OrbitControls } from 'ThreeExamples/controls/OrbitControls.js';
 import { Mesh } from 'Three/objects/Mesh.js';
@@ -26,7 +26,9 @@ const random = Between(123456789);
 const sceneParams = {
   width: window.innerWidth,
   height: window.innerHeight,
-  get aspectRatio() { return this.width / this.height },
+  get aspectRatio() {
+    return this.width / this.height;
+  },
   // Perpective camera
   fov: 45,
   // Orthographic camera
@@ -37,29 +39,18 @@ const sceneParams = {
   canvasDimensionsUpdated: false,
 };
 
-
 const shapesGroup = new Group();
 let groupRot = 0;
 
-const redShape = new Mesh(
-  new BoxGeometry(1, 1, 1),
-  new MeshBasicMaterial({ color: 0xff0000 })
-);
+const redShape = new Mesh(new BoxGeometry(1, 1, 1), new MeshBasicMaterial({ color: 0xff0000 }));
 redShape.position.x = 0.4;
-shapesGroup.add(
-  redShape,
-);
+shapesGroup.add(redShape);
 
-const greenShape = new Mesh(
-  new BoxGeometry(1, 1, 1),
-  new MeshBasicMaterial({ color: 0x00ff00 }),
-);
+const greenShape = new Mesh(new BoxGeometry(1, 1, 1), new MeshBasicMaterial({ color: 0x00ff00 }));
 greenShape.position.x = -0.4;
 greenShape.position.y = 0.51;
 greenShape.position.z = 0.3;
-shapesGroup.add(
-  greenShape,
-);
+shapesGroup.add(greenShape);
 
 const blueShape = {
   vertCount: 8,
@@ -67,35 +58,41 @@ const blueShape = {
   maxVerts: 100,
   maxFaces: 5000,
 };
-blueShape.material = new MeshBasicMaterial({ color: 0x0000ff, side: FrontSide });
-blueShape.verts = new Float32BufferAttribute(Array.from({ length: blueShape.maxVerts * 3 }, () => random(-1.25, 1.25)), 3);
+blueShape.material = new MeshBasicMaterial({
+  color: 0x0000ff,
+  side: FrontSide,
+});
+blueShape.verts = new Float32BufferAttribute(
+  Array.from({ length: blueShape.maxVerts * 3 }, () => random(-1.25, 1.25)),
+  3,
+);
 blueShape.geometry = new BufferGeometry();
 blueShape.geometry.setAttribute('position', blueShape.verts);
 
 const buildAvailableBlueFaces = () => {
   blueShape.faces = Array.from({ length: blueShape.maxFaces }, () => Math.floor(random(0, blueShape.vertCount)));
-}
+};
 const makeBlueGeometry = () => {
   blueShape.mesh && shapesGroup.remove(blueShape.mesh);
   blueShape.geometry.setIndex(blueShape.faces.slice(0, blueShape.faceCount));
   if (blueShape.mesh) {
     blueShape.mesh.geometry = blueShape.geometry;
   } else {
-    blueShape.mesh = new Mesh(
-      blueShape.geometry,
-      blueShape.material,
-    );
+    blueShape.mesh = new Mesh(blueShape.geometry, blueShape.material);
   }
   shapesGroup.add(blueShape.mesh);
-}
+};
 
 buildAvailableBlueFaces();
 makeBlueGeometry();
 
-blueGui.add(blueShape, 'vertCount', 3, blueShape.maxVerts, 1).onChange((_newValue) => { buildAvailableBlueFaces(); makeBlueGeometry(); });
-blueGui.add(blueShape, 'faceCount', 10, blueShape.maxFaces, 1).onChange((_newValue) => { makeBlueGeometry(); });
-
-
+blueGui.add(blueShape, 'vertCount', 3, blueShape.maxVerts, 1).onChange((/*_newValue*/) => {
+  buildAvailableBlueFaces();
+  makeBlueGeometry();
+});
+blueGui.add(blueShape, 'faceCount', 10, blueShape.maxFaces, 1).onChange((/*_newValue*/) => {
+  makeBlueGeometry();
+});
 
 const camera = ((type = 'perspective') => {
   let camera;
@@ -125,24 +122,13 @@ cameraGui.add(camera.position, 'x').min(-10).max(10);
 cameraGui.add(camera.position, 'y').min(-10).max(10);
 cameraGui.add(camera.position, 'z').min(-10).max(10);
 
-
-const cameraControls = new OrbitControls(
-  camera,
-  sceneParams.canvas,
-);
+const cameraControls = new OrbitControls(camera, sceneParams.canvas);
 cameraControls.enableDamping = true;
 
-
-const axesHelper = new AxesHelper(3,3,3);
-
+const axesHelper = new AxesHelper(3, 3, 3);
 
 const scene = new Scene();
-scene.add(
-  camera,
-  shapesGroup,
-  axesHelper,
-);
-
+scene.add(camera, shapesGroup, axesHelper);
 
 const renderer = new WebGLRenderer({
   canvas: sceneParams.canvas,
@@ -151,9 +137,7 @@ const renderer = new WebGLRenderer({
 });
 renderer.setClearColor(0, 0);
 
-
 let lastTickTime = Date.now();
-
 
 const fps = 60;
 const mspf = 1000 / fps;
@@ -174,13 +158,9 @@ const mspf = 1000 / fps;
 
   cameraControls.update();
 
-  renderer.render(
-    scene,
-    camera,
-  );
+  renderer.render(scene, camera);
   requestAnimationFrame(render);
 })();
-
 
 function updateRenderDimensions() {
   sceneParams.width = window.innerWidth;
@@ -189,14 +169,13 @@ function updateRenderDimensions() {
 }
 updateRenderDimensions();
 
-
-window.addEventListener('mousemove',  (event) => {
+window.addEventListener('mousemove', (event) => {
   const touch = event.touches ? event.touches[0] : event;
-  sceneParams.cursorX = (touch.clientX - sceneParams.canvas.offsetLeft) / sceneParams.width * 2 - 1;
-  sceneParams.cursorY = (touch.clientY - sceneParams.canvas.offsetTop) / sceneParams.height * -2 + 1;
+  sceneParams.cursorX = ((touch.clientX - sceneParams.canvas.offsetLeft) / sceneParams.width) * 2 - 1;
+  sceneParams.cursorY = ((touch.clientY - sceneParams.canvas.offsetTop) / sceneParams.height) * -2 + 1;
 });
 
-sceneParams.canvas.addEventListener('dblclick',  () => {
+sceneParams.canvas.addEventListener('dblclick', () => {
   if (document.fullscreenElement) {
     document.exitFullscreen();
   } else {

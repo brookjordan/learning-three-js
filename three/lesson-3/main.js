@@ -19,10 +19,7 @@ const renderer = new WebGLRenderer({
 
 const scene = new Scene();
 
-const cube = new Mesh(
-  new BoxGeometry(1, 1, 1),
-  new MeshBasicMaterial(),
-);
+const cube = new Mesh(new BoxGeometry(1, 1, 1), new MeshBasicMaterial());
 
 const camera = new PerspectiveCamera(
   45, // FOV
@@ -32,12 +29,6 @@ const camera = new PerspectiveCamera(
 renderer.setSize(sceneParams.width, sceneParams.height);
 camera.position.z = 3;
 
-scene.add(
-  camera,
-  cube,
-);
+scene.add(camera, cube);
 
-renderer.render(
-  scene,
-  camera,
-);
+renderer.render(scene, camera);
