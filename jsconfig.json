@@ -8,7 +8,8 @@
     "paths": {
       "Three/*": ["three/modules/three/src/*"],
       "ThreeExamples/*": ["three/modules/three/examples/jsm/*"],
-      "ThreeFonts/*": ["three/modules/three/examples/fonts/*"]
+      "ThreeFonts/*": ["three/modules/three/examples/fonts/*"],
+      "Dat/*": ["three/modules/dat.gui/src/dat/*"]
     }
   }
 }

@@ -41,7 +41,7 @@ import { TextureLoader } from 'Three/loaders/TextureLoader.js';
 import { CubeTextureLoader } from 'Three/loaders/CubeTextureLoader.js';
 import { FontLoader } from 'Three/loaders/FontLoader.js';
 // import { HDRCubeTextureLoader } from 'ThreeExamples/loaders/HDRCubeTextureLoader.js';
-import { GUI } from 'dat.gui';
+import { GUI } from '../modules/dat.gui/build/dat.gui.module.js';
 if (WEBGL === null || WEBGL === void 0 ? void 0 : WEBGL.isWebGL2Available()) {
   const canvas = document.createElement('canvas');
   canvas.classList.add('webgl');
@@ -92,6 +92,7 @@ addFlatTexture('matcapCell', '/three/i/matcap/7.png');
 const sceneParams = {
   width: window.innerWidth,
   height: window.innerHeight,
+  dpp: 1,
   get aspectRatio() {
     return this.width / this.height;
   },
@@ -207,7 +208,6 @@ fontLoader.load(
     text = new Mesh(new TextGeometry('I’m wooden!', options), material);
     text.geometry.center();
     text.geometry.translate(0, 0.8, 0);
-    console.log(text.geometry.boundingBox);
     shapesGroup.add(text);
   },
   () => {
@@ -323,6 +323,14 @@ window.onfocus = () => {
   animate({ init: true });
 };
 animate({ init: true });
+const calcFPS = {
+  display: document.createElement('div'),
+  lastSecond: Math.floor(performance.now() / 1000) * 1000,
+  frames: 1,
+  actualFPS: 0,
+};
+calcFPS.display.classList.add('actual-fps');
+document.body.append(calcFPS.display);
 (function render() {
   if (sceneParams.canvasDimensionsUpdated) {
     renderer.setSize(sceneParams.width, sceneParams.height);
@@ -334,11 +342,30 @@ animate({ init: true });
     sceneParams.canvasDimensionsUpdated = false;
   }
   renderer.render(scene, camera);
+  // Get FPS around 30
+  {
+    const timeNow = performance.now();
+    if (timeNow < calcFPS.lastSecond + 1000) {
+      calcFPS.frames += 1;
+    } else {
+      calcFPS.actualFPS = calcFPS.frames;
+      if (calcFPS.actualFPS < 25) {
+        updateRenderDimensions(sceneParams.dpp * 0.8);
+      }
+      if (calcFPS.actualFPS > 35) {
+        updateRenderDimensions(sceneParams.dpp * 1.01);
+      }
+      calcFPS.lastSecond = Math.floor(timeNow / 1000) * 1000;
+      calcFPS.frames = 1;
+      calcFPS.display.textContent = `${calcFPS.actualFPS} : ${+sceneParams.dpp.toFixed(2)}`;
+    }
+  }
   requestAnimationFrame(render);
 })();
-function updateRenderDimensions() {
-  sceneParams.width = window.innerWidth;
-  sceneParams.height = window.innerHeight;
+function updateRenderDimensions(dpp = sceneParams.dpp) {
+  sceneParams.dpp = dpp;
+  sceneParams.width = Math.round(window.innerWidth * dpp);
+  sceneParams.height = Math.round(window.innerHeight * dpp);
   sceneParams.canvasDimensionsUpdated = true;
 }
 updateRenderDimensions();
@@ -355,6 +382,6 @@ sceneParams.canvas.addEventListener('dblclick', () => {
     sceneParams.canvas.requestFullscreen();
   }
 });
-window.addEventListener('resize', updateRenderDimensions);
-window.addEventListener('focus', updateRenderDimensions);
-document.body.addEventListener('mouseenter', updateRenderDimensions);
+window.addEventListener('resize', () => updateRenderDimensions(1));
+window.addEventListener('focus', () => updateRenderDimensions());
+document.body.addEventListener('mouseenter', () => updateRenderDimensions());

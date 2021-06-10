@@ -1,5 +1,5 @@
 {
-  "include": ["three/**/*"],
+  "include": ["three/**/*", "untyped.d.ts"],
   "exclude": ["node_modules", "three/modules"],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
@@ -28,7 +28,7 @@
 
     /* Strict Type-Checking Options */
     "strict": true /* Enable all strict type-checking options. */,
-    // "noImplicitAny": true,                       /* Raise error on expressions and declarations with an implied 'any' type. */
+    "noImplicitAny": false /* Raise error on expressions and declarations with an implied 'any' type. */,
     // "strictNullChecks": true,                    /* Enable strict null checks. */
     // "strictFunctionTypes": true,                 /* Enable strict checking of function types. */
     // "strictBindCallApply": true,                 /* Enable strict 'bind', 'call', and 'apply' methods on functions. */
@@ -51,7 +51,8 @@
     "paths": {
       "Three/*": ["three/modules/three/src/*"],
       "ThreeExamples/*": ["three/modules/three/examples/jsm/*"],
-      "ThreeFonts/*": ["three/modules/three/examples/fonts/*"]
+      "ThreeFonts/*": ["three/modules/three/examples/fonts/*"],
+      "Dat/*": ["three/modules/dat.gui/src/dat/*"]
     } /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */,
     // "rootDirs": [],                              /* List of root folders whose combined content represents the structure of the project at runtime. */
     // "typeRoots": [],                             /* List of folders to include type definitions from. */
