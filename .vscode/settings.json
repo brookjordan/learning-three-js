@@ -1,0 +1,5 @@
+{
+  "editor.quickSuggestions": true,
+  "typescript.tsdk": "three/modules/typescript/lib",
+  "typescript.workspaceSymbols.scope": "currentProject"
+}

@@ -1,0 +1,14 @@
+{
+  "include": ["three/**/*"],
+  "exclude": ["node_modules", "three/modules"],
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "baseUrl": ".",
+    "paths": {
+      "Three/*": ["three/modules/three/src/*"],
+      "ThreeExamples/*": ["three/modules/three/examples/jsm/*"],
+      "ThreeFonts/*": ["three/modules/three/examples/fonts/*"]
+    }
+  }
+}

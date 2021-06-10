@@ -2,17 +2,20 @@
   "license": "MIT",
   "dependencies": {
     "dat.gui": "^0.7.7",
-    "prettier": "^2.3.1",
-    "three": "^0.125.2",
-    "uglify-js": "^3.13.9"
+    "three": "^0.125.2"
   },
   "scripts": {
-    "preinstall": "rm -rf modules",
-    "postinstall": "cp -r node_modules three/modules",
-    "lint": "prettier \"**/*{.js,.html,.css,.json}\" --write  --loglevel warn && eslint \"**/*.js\""
+    "clean": "rm -rf three/modules",
+    "build:modules": "cp -r node_modules three/modules",
+    "build:tsc": "yarn tsc --p tsconfig.json",
+    "lint": "prettier \"**/*{.js,.html,.css,.json}\" --write  --loglevel warn && eslint \"**/*.js\"",
+    "build": "yarn clean && yarn build:modules && yarn build:tsc && yarn lint"
   },
   "devDependencies": {
+    "@types/dat.gui": "^0.7.6",
     "eslint": "^7.28.0",
-    "eslint-plugin-import": "^2.23.4"
+    "eslint-plugin-import": "^2.23.4",
+    "prettier": "^2.3.1",
+    "typescript": "^4.3.2"
   }
 }
