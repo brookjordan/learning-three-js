@@ -2,25 +2,25 @@
 // import Random from '../scripts/alea.js';
 var _a;
 import { WEBGL } from '../modules/three/examples/jsm/WebGL.js';
-import { Scene } from 'Three/scenes/Scene.js';
-import { PerspectiveCamera } from 'Three/cameras/PerspectiveCamera.js';
-import { OrthographicCamera } from 'Three/cameras/OrthographicCamera.js';
-import { WebGLRenderer } from 'Three/renderers/WebGLRenderer.js';
-// import { WebGL1Renderer } from 'Three/renderers/WebGL1Renderer.js';
-// import { MeshBasicMaterial } from 'Three/materials/MeshBasicMaterial.js';
-// import { MeshPhongMaterial } from 'Three/materials/MeshPhongMaterial.js';
-// import { MeshLambertMaterial } from 'Three/materials/MeshLambertMaterial.js';
-import { MeshStandardMaterial } from 'Three/materials/MeshStandardMaterial.js';
-// import { MeshPhysicalMaterial } from 'Three/materials/MeshPhysicalMaterial.js';
-// import { MeshMatcapMaterial } from 'Three/materials/MeshMatcapMaterial.js';
-// import { MeshDepthMaterial } from 'Three/materials/MeshDepthMaterial.js';
-// import { MeshNormalMaterial } from 'Three/materials/MeshNormalMaterial.js';
-// import { LineDashedMaterial } from 'Three/materials/LineDashedMaterial.js';
-// import { LightShadow } from 'Three/lights/LightShadow';
-// import { PointLight } from 'Three/lights/PointLight.js';
-import { DirectionalLight } from 'Three/lights/DirectionalLight.js';
-import { AmbientLight } from 'Three/lights/AmbientLight.js';
-// import { RectAreaLight } from 'Three/lights/RectAreaLight.js';
+import { Scene } from '../modules/three/src/scenes/Scene.js';
+import { PerspectiveCamera } from '../modules/three/src/cameras/PerspectiveCamera.js';
+import { OrthographicCamera } from '../modules/three/src/cameras/OrthographicCamera.js';
+import { WebGLRenderer } from '../modules/three/src/renderers/WebGLRenderer.js';
+// import { WebGL1Renderer } from '../modules/three/src/renderers/WebGL1Renderer.js';
+// import { MeshBasicMaterial } from '../modules/three/src/materials/MeshBasicMaterial.js';
+// import { MeshPhongMaterial } from '../modules/three/src/materials/MeshPhongMaterial.js';
+// import { MeshLambertMaterial } from '../modules/three/src/materials/MeshLambertMaterial.js';
+import { MeshStandardMaterial } from '../modules/three/src/materials/MeshStandardMaterial.js';
+// import { MeshPhysicalMaterial } from '../modules/three/src/materials/MeshPhysicalMaterial.js';
+// import { MeshMatcapMaterial } from '../modules/three/src/materials/MeshMatcapMaterial.js';
+// import { MeshDepthMaterial } from '../modules/three/src/materials/MeshDepthMaterial.js';
+// import { MeshNormalMaterial } from '../modules/three/src/materials/MeshNormalMaterial.js';
+// import { LineDashedMaterial } from '../modules/three/src/materials/LineDashedMaterial.js';
+// import { LightShadow } from '../modules/three/src/lights/LightShadow';
+// import { PointLight } from '../modules/three/src/lights/PointLight.js';
+import { DirectionalLight } from '../modules/three/src/lights/DirectionalLight.js';
+import { AmbientLight } from '../modules/three/src/lights/AmbientLight.js';
+// import { RectAreaLight } from '../modules/three/src/lights/RectAreaLight.js';
 import {
   FrontSide,
   // BackSide,
@@ -29,25 +29,26 @@ import {
   NearestFilter,
   // PCFShadowMap,
   // PCFSoftShadowMap,
-} from 'Three/constants.js';
-// import { Float2**5BufferAttribute } from 'Three/core/BufferAttribute.js';
+} from '../modules/three/src/constants.js';
+// import { Float2**5BufferAttribute } from '../modules/three/src/core/BufferAttribute.js';
 import { OrbitControls } from '../modules/three/examples/jsm/controls/OrbitControls.js';
-import { Group } from 'Three/objects/Group.js';
-// import { BufferGeometry } from 'Three/core/BufferGeometry.js';
-import { SphereGeometry } from 'Three/geometries/SphereGeometry.js';
-import { BoxGeometry } from 'Three/geometries/BoxGeometry.js';
-import { TorusGeometry } from 'Three/geometries/TorusGeometry.js';
-import { PlaneGeometry } from 'Three/geometries/PlaneGeometry.js';
-import { TextGeometry } from 'Three/geometries/TextGeometry.js';
-import { Mesh } from 'Three/objects/Mesh.js';
-// import { AxesHelper } from 'Three/helpers/AxesHelper.js';
-import { LoadingManager } from 'Three/loaders/LoadingManager.js';
-import { TextureLoader } from 'Three/loaders/TextureLoader.js';
-import { CubeTextureLoader } from 'Three/loaders/CubeTextureLoader.js';
-import { FontLoader } from 'Three/loaders/FontLoader.js';
+import { Group } from '../modules/three/src/objects/Group.js';
+// import { BufferGeometry } from '../modules/three/src/core/BufferGeometry.js';
+import { SphereGeometry } from '../modules/three/src/geometries/SphereGeometry.js';
+import { BoxGeometry } from '../modules/three/src/geometries/BoxGeometry.js';
+import { TorusGeometry } from '../modules/three/src/geometries/TorusGeometry.js';
+import { PlaneGeometry } from '../modules/three/src/geometries/PlaneGeometry.js';
+import { TextGeometry } from '../modules/three/src/geometries/TextGeometry.js';
+import { Mesh } from '../modules/three/src/objects/Mesh.js';
+// import { AxesHelper } from '../modules/three/src/helpers/AxesHelper.js';
+import { LoadingManager } from '../modules/three/src/loaders/LoadingManager.js';
+import { TextureLoader } from '../modules/three/src/loaders/TextureLoader.js';
+import { CubeTextureLoader } from '../modules/three/src/loaders/CubeTextureLoader.js';
+import { FontLoader } from '../modules/three/src/loaders/FontLoader.js';
 // import { HDRCubeTextureLoader } from '../modules/three/examples/jsm/loaders/HDRCubeTextureLoader.js';
 import { GUI } from '../modules/dat.gui/build/dat.gui.module.js';
-import { Fog } from 'Three/Three.js';
+// import { Vector2 } from '../modules/three/src/math/Vector2.js';
+import { Fog } from '../modules/three/src/Three.js';
 if (WEBGL === null || WEBGL === void 0 ? void 0 : WEBGL.isWebGL2Available()) {
   const canvas = document.createElement('canvas');
   canvas.classList.add('webgl');
