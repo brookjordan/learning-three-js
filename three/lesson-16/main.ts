@@ -3,65 +3,60 @@
 
 import { WEBGL } from '../modules/three/examples/jsm/WebGL.js';
 
-import { Scene } from 'Three/scenes/Scene.js';
+import { Scene } from '../modules/three/src/scenes/Scene.js';
 
-import { PerspectiveCamera } from 'Three/cameras/PerspectiveCamera.js';
-import { OrthographicCamera } from 'Three/cameras/OrthographicCamera.js';
+import { PerspectiveCamera } from '../modules/three/src/cameras/PerspectiveCamera.js';
+import { OrthographicCamera } from '../modules/three/src/cameras/OrthographicCamera.js';
 
-import { WebGLRenderer } from 'Three/renderers/WebGLRenderer.js';
-// import { WebGL1Renderer } from 'Three/renderers/WebGL1Renderer.js';
+import { WebGLRenderer } from '../modules/three/src/renderers/WebGLRenderer.js';
+// import { WebGL1Renderer } from '../modules/three/src/renderers/WebGL1Renderer.js';
 
-// import { MeshBasicMaterial } from 'Three/materials/MeshBasicMaterial.js';
-// import { MeshPhongMaterial } from 'Three/materials/MeshPhongMaterial.js';
-// import { MeshLambertMaterial } from 'Three/materials/MeshLambertMaterial.js';
-import { MeshStandardMaterial } from 'Three/materials/MeshStandardMaterial.js';
-// import { MeshPhysicalMaterial } from 'Three/materials/MeshPhysicalMaterial.js';
-// import { MeshMatcapMaterial } from 'Three/materials/MeshMatcapMaterial.js';
-// import { MeshDepthMaterial } from 'Three/materials/MeshDepthMaterial.js';
-// import { MeshNormalMaterial } from 'Three/materials/MeshNormalMaterial.js';
-// import { LineDashedMaterial } from 'Three/materials/LineDashedMaterial.js';
+// import { MeshBasicMaterial } from '../modules/three/src/materials/MeshBasicMaterial.js';
+// import { MeshPhongMaterial } from '../modules/three/src/materials/MeshPhongMaterial.js';
+// import { MeshLambertMaterial } from '../modules/three/src/materials/MeshLambertMaterial.js';
+import { MeshStandardMaterial } from '../modules/three/src/materials/MeshStandardMaterial.js';
+// import { MeshPhysicalMaterial } from '../modules/three/src/materials/MeshPhysicalMaterial.js';
+// import { MeshMatcapMaterial } from '../modules/three/src/materials/MeshMatcapMaterial.js';
+// import { MeshDepthMaterial } from '../modules/three/src/materials/MeshDepthMaterial.js';
+// import { MeshNormalMaterial } from '../modules/three/src/materials/MeshNormalMaterial.js';
+// import { LineDashedMaterial } from '../modules/three/src/materials/LineDashedMaterial.js';
 
-// import { LightShadow } from 'Three/lights/LightShadow';
+// import { LightShadow } from '../modules/three/src/lights/LightShadow';
 
-// import { PointLight } from 'Three/lights/PointLight.js';
-import { DirectionalLight } from 'Three/lights/DirectionalLight.js';
-import { AmbientLight } from 'Three/lights/AmbientLight.js';
-// import { RectAreaLight } from 'Three/lights/RectAreaLight.js';
+// import { PointLight } from '../modules/three/src/lights/PointLight.js';
+import { DirectionalLight } from '../modules/three/src/lights/DirectionalLight.js';
+import { AmbientLight } from '../modules/three/src/lights/AmbientLight.js';
+// import { RectAreaLight } from '../modules/three/src/lights/RectAreaLight.js';
 
 import {
   FrontSide,
   // BackSide,
   // DoubleSide,
   // RepeatWrapping,
-  NearestFilter,
   // PCFShadowMap,
   // PCFSoftShadowMap,
-} from 'Three/constants.js';
+} from '../modules/three/src/constants.js';
 
-// import { Float2**5BufferAttribute } from 'Three/core/BufferAttribute.js';
+// import { Float2**5BufferAttribute } from '../modules/three/src/core/BufferAttribute.js';
 import { OrbitControls } from '../modules/three/examples/jsm/controls/OrbitControls.js';
 
-import { Group } from 'Three/objects/Group.js';
-// import { BufferGeometry } from 'Three/core/BufferGeometry.js';
-import { SphereGeometry } from 'Three/geometries/SphereGeometry.js';
-import { BoxGeometry } from 'Three/geometries/BoxGeometry.js';
-import { TorusGeometry } from 'Three/geometries/TorusGeometry.js';
-import { PlaneGeometry } from 'Three/geometries/PlaneGeometry.js';
-import { TextGeometry } from 'Three/geometries/TextGeometry.js';
+import { Group } from '../modules/three/src/objects/Group.js';
+// import { BufferGeometry } from '../modules/three/src/core/BufferGeometry.js';
+import { SphereGeometry } from '../modules/three/src/geometries/SphereGeometry.js';
+import { BoxGeometry } from '../modules/three/src/geometries/BoxGeometry.js';
+import { TorusGeometry } from '../modules/three/src/geometries/TorusGeometry.js';
+import { PlaneGeometry } from '../modules/three/src/geometries/PlaneGeometry.js';
+// import { TextGeometry } from '../modules/three/src/geometries/TextGeometry.js';
 
-import { Mesh } from 'Three/objects/Mesh.js';
+import { Mesh } from '../modules/three/src/objects/Mesh.js';
 
-// import { AxesHelper } from 'Three/helpers/AxesHelper.js';
-import { LoadingManager } from 'Three/loaders/LoadingManager.js';
-import { TextureLoader } from 'Three/loaders/TextureLoader.js';
-import { CubeTextureLoader } from 'Three/loaders/CubeTextureLoader.js';
-import { FontLoader } from 'Three/loaders/FontLoader.js';
-// import { HDRCubeTextureLoader } from '../modules/three/examples/jsm/loaders/HDRCubeTextureLoader.js';
+// import { AxesHelper } from '../modules/three/src/helpers/AxesHelper.js';
 
 import { GUI } from '../modules/dat.gui/build/dat.gui.module.js';
-import { Texture } from 'Three/textures/Texture.js';
-import { Vector2 } from 'Three/math/Vector2.js';
-import { Fog } from 'Three/Three.js';
+import { Texture } from '../modules/three/src/textures/Texture.js';
+// import { Vector2 } from '../modules/three/src/math/Vector2.js';
+import { Fog } from '../modules/three/src/scenes/Fog.js';
+import { TextureContainer } from '../scripts/textures.js';
 
 
 if (WEBGL?.isWebGL2Available()) {
@@ -80,44 +75,30 @@ if (WEBGL?.isWebGL2Available()) {
 const gui = new GUI({});
 const shadowsGUI = gui.addFolder('Shadows');
 
-const loadingManager = new LoadingManager();
-const fontLoader = new FontLoader(loadingManager);
-const textureLoader = new TextureLoader(loadingManager);
-const cubeTextureLoader = new CubeTextureLoader(loadingManager);
-// const cubeHDRTextureLoader = new HDRCubeTextureLoader(loadingManager);
-const textures: {
-  [name: string]: Texture;
-} = {};
-const addFlatTexture = (name: string, src: string) => {
-  textures[name] = textureLoader.load(src);
-  textures[name].minFilter = NearestFilter;
-  textures[name].magFilter = NearestFilter;
-};
+const textures = new TextureContainer({
+  environment: [
+    '/three/i/environmentMap/px.jpg',
+    '/three/i/environmentMap/nx.jpg',
+    '/three/i/environmentMap/py.jpg',
+    '/three/i/environmentMap/ny.jpg',
+    '/three/i/environmentMap/pz.jpg',
+    '/three/i/environmentMap/nz.jpg',
+  ],
+});
 
-textures.environment = cubeTextureLoader.load([
-  '/three/i/environmentMap/px.jpg',
-  '/three/i/environmentMap/nx.jpg',
-  '/three/i/environmentMap/py.jpg',
-  '/three/i/environmentMap/ny.jpg',
-  '/three/i/environmentMap/pz.jpg',
-  '/three/i/environmentMap/nz.jpg',
-]);
-textures.environment.minFilter = NearestFilter;
-textures.environment.magFilter = NearestFilter;
+textures.addFlatTexture('doorAlpha', '/three/i/door/alpha.jpg');
+textures.addFlatTexture('doorAmbientOcclusion', '/three/i/door/ambientOcclusion.jpg');
+textures.addFlatTexture('doorColor', '/three/i/door/color.jpg');
+textures.addFlatTexture('doorHeight', '/three/i/door/height.jpg');
+textures.addFlatTexture('doorMetalness', '/three/i/door/metalness.jpg');
+textures.addFlatTexture('doorNormal', '/three/i/door/normal.jpg');
+textures.addFlatTexture('doorRoughness', '/three/i/door/roughness.jpg');
 
-addFlatTexture('doorAlpha', '/three/i/door/alpha.jpg');
-addFlatTexture('doorAmbientOcclusion', '/three/i/door/ambientOcclusion.jpg');
-addFlatTexture('doorColor', '/three/i/door/color.jpg');
-addFlatTexture('doorHeight', '/three/i/door/height.jpg');
-addFlatTexture('doorMetalness', '/three/i/door/metalness.jpg');
-addFlatTexture('doorNormal', '/three/i/door/normal.jpg');
-addFlatTexture('doorRoughness', '/three/i/door/roughness.jpg');
-
-addFlatTexture('matcapClay', '/three/i/matcap/1.png');
-addFlatTexture('matcapChrome', '/three/i/matcap/3.png');
-addFlatTexture('matcapRed', '/three/i/matcap/4.png');
-addFlatTexture('matcapIronman', '/three/i/matcap/5.png');
-addFlatTexture('matcapCell', '/three/i/matcap/7.png');
+textures.addFlatTexture('matcapClay', '/three/i/matcap/1.png');
+textures.addFlatTexture('matcapChrome', '/three/i/matcap/3.png');
+textures.addFlatTexture('matcapRed', '/three/i/matcap/4.png');
+textures.addFlatTexture('matcapIronman', '/three/i/matcap/5.png');
+textures.addFlatTexture('matcapCell', '/three/i/matcap/7.png');
 
 const sceneParams: any = {
   width: window.innerWidth,
@@ -145,18 +126,18 @@ const material = new MeshStandardMaterial();
   // material.transparent = true;
   material.flatShading = false;
 
-  // material.alphaMap = textures.doorAlpha;
-  // material.displacementMap = textures.doorHeight;
+  // material.alphaMap = textures.get('doorAlpha');
+  // material.displacementMap = textures.get('doorHeight');
   // material.displacementScale = 0.1;
-  // material.matcap = textures.matcapCell;`
-  material.aoMap = textures.doorAmbientOcclusion;
+  // material.matcap = textures.get('matcapCell');`
+  material.aoMap = textures.get('doorAmbientOcclusion');
   material.aoMapIntensity = 1.5;
-  material.map = textures.doorColor;
+  material.map = textures.get('doorColor');
   material.metalness = 0.1;
-  material.metalnessMap = textures.doorMetalness;
-  material.normalMap = textures.doorNormal;
+  material.metalnessMap = textures.get('doorMetalness');
+  material.normalMap = textures.get('doorNormal');
   material.roughness = 2;
-  material.roughnessMap = textures.doorRoughness;
+  material.roughnessMap = textures.get('doorRoughness');
   material.envMap = textures.environment;
   material.envMapIntensity = 1;
 }
@@ -194,39 +175,6 @@ const torus = new Mesh(new TorusGeometry(0.6, 0.2, 2**5, 2**6), material);
   torus.receiveShadow = true;
   shapesGroup.add(torus);
 }
-
-let text;
-fontLoader.load(
-  '/three/modules/three/examples/fonts/gentilis_regular.typeface.json',
-  (font) => {
-    const options = {
-      font,
-      size: 0.5,
-      height: 0.2,
-      steps: 2,
-      curveSegments: 4,
-      bevelEnabled: true,
-      bevelThickness: 0.03,
-      bevelSize: 0.02,
-      bevelOffset: 0,
-      bevelSegments: 5,
-    };
-    text = new Mesh(new TextGeometry('I’m wooden!', options), material);
-    text.geometry.center();
-    text.geometry.translate(0, 0.8, 0);
-    text.castShadow = true;
-    text.receiveShadow = true;
-    shadowsGUI.add(text, 'castShadow').name('Text: cast');
-    shadowsGUI.add(text, 'receiveShadow').name(' - receive');
-    shapesGroup.add(text);
-  },
-  () => {
-    console.log('Still loading font…');
-  },
-  (e) => {
-    console.log('Error loading font: ' + e);
-  },
-);
 
 // const areaLight = new RectAreaLight(0xf9f3b5, 5, 5, 5);
 // areaLight.position.x = 4;

@@ -1,7 +1,7 @@
 // alea is a predictable random library
 // import Random from '../scripts/alea.js';
 var _a;
-import { WEBGL } from 'ThreeExamples/WebGL.js';
+import { WEBGL } from '../modules/three/examples/jsm/WebGL.js';
 import { Scene } from 'Three/scenes/Scene.js';
 import { PerspectiveCamera } from 'Three/cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from 'Three/cameras/OrthographicCamera.js';
@@ -11,6 +11,12 @@ import { WebGLRenderer } from 'Three/renderers/WebGLRenderer.js';
 // import { MeshPhongMaterial } from 'Three/materials/MeshPhongMaterial.js';
 // import { MeshLambertMaterial } from 'Three/materials/MeshLambertMaterial.js';
 import { MeshStandardMaterial } from 'Three/materials/MeshStandardMaterial.js';
+// import { MeshPhysicalMaterial } from 'Three/materials/MeshPhysicalMaterial.js';
+// import { MeshMatcapMaterial } from 'Three/materials/MeshMatcapMaterial.js';
+// import { MeshDepthMaterial } from 'Three/materials/MeshDepthMaterial.js';
+// import { MeshNormalMaterial } from 'Three/materials/MeshNormalMaterial.js';
+// import { LineDashedMaterial } from 'Three/materials/LineDashedMaterial.js';
+// import { LightShadow } from 'Three/lights/LightShadow';
 // import { PointLight } from 'Three/lights/PointLight.js';
 import { DirectionalLight } from 'Three/lights/DirectionalLight.js';
 import { AmbientLight } from 'Three/lights/AmbientLight.js';
@@ -21,9 +27,11 @@ import {
   // DoubleSide,
   // RepeatWrapping,
   NearestFilter,
+  // PCFShadowMap,
+  // PCFSoftShadowMap,
 } from 'Three/constants.js';
-// import { Float32BufferAttribute } from 'Three/core/BufferAttribute.js';
-import { OrbitControls } from 'ThreeExamples/controls/OrbitControls.js';
+// import { Float2**5BufferAttribute } from 'Three/core/BufferAttribute.js';
+import { OrbitControls } from '../modules/three/examples/jsm/controls/OrbitControls.js';
 import { Group } from 'Three/objects/Group.js';
 // import { BufferGeometry } from 'Three/core/BufferGeometry.js';
 import { SphereGeometry } from 'Three/geometries/SphereGeometry.js';
@@ -37,8 +45,9 @@ import { LoadingManager } from 'Three/loaders/LoadingManager.js';
 import { TextureLoader } from 'Three/loaders/TextureLoader.js';
 import { CubeTextureLoader } from 'Three/loaders/CubeTextureLoader.js';
 import { FontLoader } from 'Three/loaders/FontLoader.js';
-// import { HDRCubeTextureLoader } from 'ThreeExamples/loaders/HDRCubeTextureLoader.js';
+// import { HDRCubeTextureLoader } from '../modules/three/examples/jsm/loaders/HDRCubeTextureLoader.js';
 import { GUI } from '../modules/dat.gui/build/dat.gui.module.js';
+import { Fog } from 'Three/Three.js';
 if (WEBGL === null || WEBGL === void 0 ? void 0 : WEBGL.isWebGL2Available()) {
   const canvas = document.createElement('canvas');
   canvas.classList.add('webgl');
@@ -123,14 +132,14 @@ const material = new MeshStandardMaterial();
   material.envMap = textures.environment;
   material.envMapIntensity = 1;
 }
-const floor = new Mesh(new PlaneGeometry(30, 30), material);
+const floor = new Mesh(new PlaneGeometry(15, 15), material);
 floor.geometry.setAttribute('uv2', floor.geometry.attributes.uv);
 {
   floor.rotation.x = Math.PI / -2;
   floor.position.y = -1.4;
   floor.receiveShadow = true;
 }
-const sphere = new Mesh(new SphereGeometry(0.8, 128, 64), material);
+const sphere = new Mesh(new SphereGeometry(0.8, 2 ** 7, 2 ** 6), material);
 {
   sphere.geometry.setAttribute('uv2', sphere.geometry.attributes.uv);
   sphere.position.x = -1.4;
@@ -147,7 +156,7 @@ const box = new Mesh(new BoxGeometry(1, 1, 1, 1, 1, 1), material);
   box.receiveShadow = true;
   shapesGroup.add(box);
 }
-const torus = new Mesh(new TorusGeometry(0.6, 0.2, 32, 64), material);
+const torus = new Mesh(new TorusGeometry(0.6, 0.2, 2 ** 5, 2 ** 6), material);
 {
   torus.geometry.setAttribute('uv2', torus.geometry.attributes.uv);
   torus.position.x = 1.4;
@@ -204,6 +213,7 @@ const mainLight = new DirectionalLight(0xe8e7ac);
   // mainLight.power = 5000;
   mainLight.lookAt(0, 0, 0);
   mainLight.castShadow = true;
+  mainLight.shadow.radius = 3;
   mainLight.shadow.mapSize.width = 512;
   mainLight.shadow.mapSize.height = 512;
   mainLight.shadow.camera.near = 6;
@@ -250,7 +260,13 @@ const updateShadow = {
   },
 };
 shadowsGUI.add(mainLight, 'castShadow').name('Main: cast');
-shadowsGUI.add(updateShadow, 'mainQuality').min(32).max(1024).step(32).name('Main: quality');
+shadowsGUI
+  .add(updateShadow, 'mainQuality')
+  .min(2 ** 5)
+  .max(2 ** 11)
+  .step(2 ** 5)
+  .name('Main: quality');
+shadowsGUI.add(mainLight.shadow, 'radius').min(0).max(100).step(1).name('Main: radius');
 shadowsGUI.add(sphere, 'castShadow').name('Sphere: cast');
 shadowsGUI.add(sphere, 'receiveShadow').name(' - receive');
 shadowsGUI.add(box, 'castShadow').name('Box: cast');
@@ -261,6 +277,7 @@ const cameraControls = new OrbitControls(camera, sceneParams.canvas);
 cameraControls.enableDamping = true;
 // const axesHelper = new AxesHelper(3,3,3);
 const scene = new Scene();
+scene.fog = new Fog(0xffffff, 3, 13);
 scene.add(
   camera,
   floor,
@@ -278,6 +295,7 @@ const renderer = new WebGLRenderer({
 renderer.physicallyCorrectLights = true;
 renderer.setClearColor(0, 0);
 renderer.shadowMap.enabled = true;
+// renderer.shadowMap.type = PCFShadowMap; // the default
 const groupSpeed = 0.06;
 const itemSpeed = 0.2;
 function step() {
