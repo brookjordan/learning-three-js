@@ -9,8 +9,10 @@
     "build:modules": "yarn clean && cp -r node_modules three/modules",
     "build:tsc": "yarn tsc --p tsconfig.json",
     "dev:tsc": "yarn tsc --p tsconfig.json --watch",
-    "lint": "prettier \"**/*{.js,.html,.css,.json}\" --write  --loglevel warn && eslint \"**/*.js\"",
-    "build": "yarn build:modules && yarn build:tsc && yarn lint"
+    "eslint": "eslint \"**/*.js\" --fix --quiet",
+    "prettier": "prettier \"**/*{.js,.html,.css,.json}\" --write  --loglevel warn",
+    "format": "yarn prettier && yarn eslint",
+    "build": "yarn build:modules && yarn build:tsc && yarn prettier"
   },
   "devDependencies": {
     "@types/dat.gui": "^0.7.6",
