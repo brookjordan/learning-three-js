@@ -7,7 +7,7 @@ import { WebGLRenderer } from '../modules/three/src/renderers/WebGLRenderer.js';
 import { MeshStandardMaterial } from '../modules/three/src/materials/MeshStandardMaterial.js';
 import { DirectionalLight } from '../modules/three/src/lights/DirectionalLight.js';
 import { AmbientLight } from '../modules/three/src/lights/AmbientLight.js';
-import { FrontSide } from '../modules/three/src/constants.js';
+import { PCFSoftShadowMap } from '../modules/three/src/constants.js';
 import { OrbitControls } from '../modules/three/examples/jsm/controls/OrbitControls.js';
 // import { Group } from '../modules/three/src/objects/Group.js';
 import { SphereGeometry } from '../modules/three/src/geometries/SphereGeometry.js';
@@ -22,7 +22,6 @@ import { Fog } from '../modules/three/src/scenes/Fog.js';
 import { TextureContainer } from '../scripts/textures.js';
 // import { PointsMaterial } from '../modules/three/src/materials/PointsMaterial.js';
 import { Vector3 } from '../modules/three/src/math/Vector3.js';
-import { PCFSoftShadowMap } from '../modules/three/src/constants.js';
 let canvas = document.createElement('canvas');
 if (WEBGL === null || WEBGL === void 0 ? void 0 : WEBGL.isWebGL2Available()) {
   document.body.append(canvas);
@@ -66,8 +65,6 @@ textures.addFlatTexture('doorNormal', '/three/i/door/normal.jpg');
 textures.addFlatTexture('doorRoughness', '/three/i/door/roughness.jpg');
 let doorMaterial = new MeshStandardMaterial();
 {
-  doorMaterial.side = FrontSide;
-  doorMaterial.flatShading = false;
   doorMaterial.aoMap = textures.get('doorAmbientOcclusion');
   doorMaterial.aoMapIntensity = 1.5;
   doorMaterial.map = textures.get('doorColor');
@@ -89,13 +86,11 @@ let floorHeight = -1.4;
 }
 let particleMaterial = new MeshStandardMaterial();
 {
-  particleMaterial.side = FrontSide;
-  particleMaterial.flatShading = false;
-  particleMaterial.metalness = 0.1;
-  particleMaterial.roughness = 10;
+  // particleMaterial.metalness = 0.01;
+  // particleMaterial.roughness = 0;
   particleMaterial.vertexColors = true;
   // particleMaterial.envMap = textures.environment;
-  // particleMaterial.envMapIntensity = 3;
+  // particleMaterial.envMapIntensity = 100;
 }
 let particleGeometry = new SphereGeometry(1, 9, 5);
 particleGeometry.setAttribute('position', particleGeometry.getAttribute('position'));
@@ -155,7 +150,6 @@ let addParticle = ({ init = false } = {}) => {
       Math.random() * emitter.deviation - emitter.deviation / 2,
     ),
   );
-  console.log(particle.mesh.geometry.getAttribute('position').count);
   particle.mesh.geometry.setAttribute(
     'color',
     new BufferAttribute(
