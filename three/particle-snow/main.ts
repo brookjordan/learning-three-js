@@ -237,7 +237,7 @@ let cameraControls = new OrbitControls(camera, sceneParams.canvas);
 
 
 let gui = new GUI({});
-let particlesGUI = gui.addFolder('Particles');
+let particlesGUI = gui.addFolder('Instances');
 particlesGUI.add(particleSettings, 'perSecond').min(1).max(2000).step(1).name('Per second');
 
 // let axesHelper = new AxesHelper(3,3,3);

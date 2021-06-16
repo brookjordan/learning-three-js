@@ -9,10 +9,6 @@ import { PerspectiveCamera } from '../modules/three/src/cameras/PerspectiveCamer
 import { WebGLRenderer } from '../modules/three/src/renderers/WebGLRenderer.js';
 
 import { MeshStandardMaterial } from '../modules/three/src/materials/MeshStandardMaterial.js';
-// import { LineDashedMaterial } from '../modules/three/src/materials/LineDashedMaterial.js';
-
-// import { AxesHelper } from '../modules/three/src/helpers/AxesHelper.js';
-import { CameraHelper } from '../modules/three/src/helpers/CameraHelper.js';
 
 import { DirectionalLight } from '../modules/three/src/lights/DirectionalLight.js';
 import { AmbientLight } from '../modules/three/src/lights/AmbientLight.js';
@@ -23,21 +19,16 @@ import {
 
 import { OrbitControls } from '../modules/three/examples/jsm/controls/OrbitControls.js';
 
-// import { Group } from '../modules/three/src/objects/Group.js';
 import { SphereGeometry } from '../modules/three/src/geometries/SphereGeometry.js';
-// import { TorusGeometry } from '../modules/three/src/geometries/TorusGeometry.js';
 import { CylinderGeometry } from '../modules/three/src/geometries/CylinderGeometry.js';
-// import { BufferGeometry } from '../modules/three/src/core/BufferGeometry.js';
 import { BufferAttribute } from '../modules/three/src/core/BufferAttribute.js';
-// import { Points } from '../modules/three/src/objects/Points.js';
 
 import { Mesh } from '../modules/three/src/objects/Mesh.js';
 
 import { GUI } from '../modules/dat.gui/build/dat.gui.module.js';
-import { Fog } from '../modules/three/src/scenes/Fog.js';
 import { TextureContainer } from '../scripts/textures.js';
-// import { PointsMaterial } from '../modules/three/src/materials/PointsMaterial.js';
 import { Vector3 } from '../modules/three/src/math/Vector3.js';
+import { css } from '../scripts/formatter.js';
 
 let canvas = document.createElement('canvas');
 if (WEBGL?.isWebGL2Available()) {
@@ -279,37 +270,37 @@ if ('ontouchstart' in document.documentElement) {
   const jumpButton = document.createElement('button');
   jumpButton.classList.add('button', 'button--jump');
   const styles = document.createElement('style');
-  styles.innerText = `
-  .buttons {
-    position: fixed;
-    bottom: 10px;
-    left: 10px;
-    display: grid;
-    grid-template:
-      '. up .' 44px
-      'left . right' 44px
-      '. down .' 44px / 44px 44px 44px;
-  }
-  .button--up {
-    grid-area: up;
-  }
-  .button--down {
-    grid-area: down;
-  }
-  .button--left {
-    grid-area: left;
-  }
-  .button--right {
-    grid-area: right;
-  }
-  .button--jump {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    width: 100px;
-    height: 100px;
-    border-radius: 50px;
-  }
+  styles.innerText = css`
+    .buttons {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      display: grid;
+      grid-template:
+        '. up .' 44px
+        'left . right' 44px
+        '. down .' 44px / 44px 44px 44px;
+    }
+    .button--up {
+      grid-area: up;
+    }
+    .button--down {
+      grid-area: down;
+    }
+    .button--left {
+      grid-area: left;
+    }
+    .button--right {
+      grid-area: right;
+    }
+    .button--jump {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      width: 100px;
+      height: 100px;
+      border-radius: 50px;
+    }
   `;
   document.body.append(buttons);
   buttons.append(upButton, downButton, leftButton, rightButton, jumpButton);
@@ -325,12 +316,28 @@ if ('ontouchstart' in document.documentElement) {
   rightButton.addEventListener('touchend', (e) => { e.preventDefault(); keys.d.pressed = false; });
   jumpButton.addEventListener('touchstart', (e) => { e.preventDefault(); keys[' '].pressed = true; });
   jumpButton.addEventListener('touchend', (e) => { e.preventDefault(); keys[' '].pressed = false; });
+} else {
+  let controlInstructions = document.createElement('p');
+  controlInstructions.textContent = 'w, a, s, d to move. Space to jump.';
+  controlInstructions.classList.add('control-instructions');
+
+  const styles = document.createElement('style');
+  styles.innerText = css`
+    .control-instructions {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      pointer-events: none;
+    }
+  `;
+  document.body.append(controlInstructions);
+  document.head.append(styles);
 }
 
 
 
 let mainLight = new DirectionalLight(0xe8e7ac);
-// let mainLightShadowHelper: CameraHelper;
+// // let mainLightShadowHelper: CameraHelper;
 {
   mainLight.position.x = 2;
   mainLight.position.z = 7;
@@ -348,7 +355,7 @@ let mainLight = new DirectionalLight(0xe8e7ac);
   mainLight.shadow.camera.bottom =  -6.2;
   mainLight.shadow.camera.right = 13;
   mainLight.shadow.camera.left = -13;
-  // mainLightShadowHelper  = new CameraHelper(mainLight.shadow.camera);
+  // // mainLightShadowHelper  = new CameraHelper(mainLight.shadow.camera);
 }
 
 let ambientLight = new AmbientLight(0x7a41ff);

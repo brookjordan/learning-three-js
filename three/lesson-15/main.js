@@ -48,7 +48,7 @@ import { FontLoader } from '../modules/three/src/loaders/FontLoader.js';
 // import { HDRCubeTextureLoader } from '../modules/three/examples/jsm/loaders/HDRCubeTextureLoader.js';
 import { GUI } from '../modules/dat.gui/build/dat.gui.module.js';
 // import { Vector2 } from '../modules/three/src/math/Vector2.js';
-import { Fog } from '../modules/three/src/Three.js';
+import { Fog } from '../modules/three/src/scenes/Fog.js';
 if (WEBGL === null || WEBGL === void 0 ? void 0 : WEBGL.isWebGL2Available()) {
   const canvas = document.createElement('canvas');
   canvas.classList.add('webgl');

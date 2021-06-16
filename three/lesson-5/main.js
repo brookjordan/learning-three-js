@@ -1,12 +1,12 @@
-import { Scene } from 'Three/scenes/Scene.js';
-import { PerspectiveCamera } from 'Three/cameras/PerspectiveCamera.js';
-import { WebGLRenderer } from 'Three/renderers/WebGLRenderer.js';
-import { BoxGeometry } from 'Three/geometries/BoxGeometry.js';
-import { MeshBasicMaterial } from 'Three/materials/MeshBasicMaterial.js';
-// import { MeshPhongMaterial } from 'Three/materials/MeshPhongMaterial.js';
-import { Mesh } from 'Three/objects/Mesh.js';
-import { Group } from 'Three/objects/Group.js';
-import { AxesHelper } from 'Three/helpers/AxesHelper.js';
+import { Scene } from '../modules/three/src/scenes/Scene.js';
+import { PerspectiveCamera } from '../modules/three/src/cameras/PerspectiveCamera.js';
+import { WebGLRenderer } from '../modules/three/src/renderers/WebGLRenderer.js';
+import { BoxGeometry } from '../modules/three/src/geometries/BoxGeometry.js';
+import { MeshBasicMaterial } from '../modules/three/src/materials/MeshBasicMaterial.js';
+// import { MeshPhongMaterial } from '../modules/three/src/materials/MeshPhongMaterial.js';
+import { Mesh } from '../modules/three/src/objects/Mesh.js';
+import { Group } from '../modules/three/src/objects/Group.js';
+import { AxesHelper } from '../modules/three/src/helpers/AxesHelper.js';
 
 const sceneParams = {
   width: 800,

@@ -61,7 +61,7 @@ import { FontLoader } from '../modules/three/src/loaders/FontLoader.js';
 import { GUI } from '../modules/dat.gui/build/dat.gui.module.js';
 import { Texture } from '../modules/three/src/textures/Texture.js';
 // import { Vector2 } from '../modules/three/src/math/Vector2.js';
-import { Fog } from '../modules/three/src/Three.js';
+import { Fog } from '../modules/three/src/scenes/Fog.js';
 
 
 if (WEBGL?.isWebGL2Available()) {
