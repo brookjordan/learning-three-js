@@ -430,9 +430,6 @@ window.onblur = () => {
 window.onfocus = () => {
   animate({ init: true });
 };
-// for (let i = 0; i < 1000; i += 1) {
-//   addParticle({ init: true });
-// }
 animate({ init: true });
 function render() {
   if (sceneParams.canvasDimensionsUpdated) {

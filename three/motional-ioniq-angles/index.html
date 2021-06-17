@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Motional: Ioniq load test</title>
+
+    <style>
+      *,
+      ::before,
+      ::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+      }
+      canvas {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain;
+      }
+      button {
+        font: inherit;
+      }
+      h2 {
+        margin: 0;
+      }
+      .app {
+        display: grid;
+        grid-template:
+          'car' auto
+          'actions' 1fr
+          / 1fr;
+      }
+      .car,
+      .actions {
+        position: relative;
+      }
+      .car {
+        aspect-ratio: 1 / 1;
+        width: min(100vw, calc(100vh - 200px));
+        height: auto;
+      }
+      .actions {
+        padding: 10px 20px;
+        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji,
+          Segoe UI Emoji;
+      }
+      @media (min-aspect-ratio: 1/1) {
+        .app {
+          display: grid;
+          grid-template:
+            'car actions' 1fr
+            / auto 1fr;
+        }
+        .car {
+          width: auto;
+          height: min(100vh, calc(100vw - 320px));
+        }
+        .actions {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <div class="car"></div>
+      <div class="actions">
+        <h2>Angles</h2>
+        <div
+          class="shots"
+          style="
+            display: grid;
+            grid-gap: 10px;
+            grid-template:
+              'top front driver'
+              'left showroom  right'
+              'passengers back bottom'
+              / auto auto auto;
+            width: 280px;
+            height: 150px;
+          "
+        >
+          <button type="button" style="grid-area: showroom" class="shot shot--showroom">Showroom</button>
+          <button type="button" style="grid-area: driver" class="shot shot--driver">Driver</button>
+          <button type="button" style="grid-area: passengers" class="shot shot--passengers">Passengers</button>
+          <button type="button" style="grid-area: left" class="shot shot--left">Left</button>
+          <button type="button" style="grid-area: right" class="shot shot--right">Right</button>
+          <button type="button" style="grid-area: front" class="shot shot--front">Front</button>
+          <button type="button" style="grid-area: back" class="shot shot--back">Back</button>
+          <button type="button" style="grid-area: top" class="shot shot--top">Top</button>
+          <button type="button" style="grid-area: bottom" class="shot shot--bottom">Bottom</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
