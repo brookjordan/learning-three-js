@@ -120,8 +120,8 @@ const shaderMods = {
 
   update(key, value) {
     this[key] = value;
-    material.uniforms.u_width.value = canvas.width * this.w;
-    material.uniforms.u_height.value = canvas.height * this.h;
+    material.uniforms.u_width.value = Math.min(canvas.width, canvas.height) * this.w;
+    material.uniforms.u_height.value = Math.min(canvas.width, canvas.height) * this.h;
 
     material.uniforms.u_a.value = this.a;
     material.uniforms.u_b.value = this.b;
@@ -142,8 +142,8 @@ const shaderMods = {
 
 const material = new RawShaderMaterial({
   uniforms: {
-    u_width: { value: canvas.width * shaderMods.w },
-    u_height: { value: canvas.height * shaderMods.h },
+    u_width: { value: Math.min(canvas.width, canvas.height) * shaderMods.w },
+    u_height: { value: Math.min(canvas.width, canvas.height) * shaderMods.h },
 
     u_a: { value: shaderMods.a },
     u_b: { value: shaderMods.b },
@@ -202,7 +202,7 @@ const material = new RawShaderMaterial({
   `,
 
   fragmentShader: /* glsl */`
-    precision mediump float;
+    precision highp float;
 
     uniform float u_width;
     uniform float u_height;
